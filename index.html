@@ -657,6 +657,10 @@
       const commuteSchedule = document.getElementById('commuteSchedule');
       const sleepSchedule = document.getElementById('sleepSchedule');
       
+      console.log('Form submitted'); // Debug log
+      console.log('Work:', workSchedule.value);
+      console.log('Sleep:', sleepSchedule.value);
+      
       if (!workSchedule.value || !sleepSchedule.value) {
         alert('Please select both work and sleep schedules');
         return;
@@ -665,6 +669,8 @@
       const work = parseInt(workSchedule.selectedOptions[0].dataset.hours);
       const commute = parseInt(commuteSchedule.selectedOptions[0].dataset.hours);
       const sleep = parseInt(sleepSchedule.selectedOptions[0].dataset.hours);
+      
+      console.log('Hours - Work:', work, 'Commute:', commute, 'Sleep:', sleep); // Debug log
       
       const totalCommitted = work + commute + sleep;
       let available = 168 - totalCommitted;
@@ -688,9 +694,12 @@
       document.getElementById('calendarPlaceholder').style.display = 'none';
       document.getElementById('calendarContainer').classList.add('show');
       
+      console.log('Calendar should be visible now'); // Debug log
+      
       // Add event listeners
       setTimeout(() => {
         addPlannerEventListeners();
+        console.log('Event listeners added'); // Debug log
       }, 100);
     });
 
