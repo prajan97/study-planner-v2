@@ -242,11 +242,15 @@
             <label>Work & Commute Schedule</label>
             <select id="workSchedule" required>
               <option value="">Select your work schedule</option>
-              <option value="part-time" data-hours="20">Part Time: 4 hrs/day (20 hrs/week)</option>
-              <option value="short" data-hours="30">Short: 6 hrs/day (30 hrs/week)</option>
-              <option value="standard" data-hours="40" selected>Standard: 8 hrs/day (40 hrs/week)</option>
-              <option value="extended" data-hours="50">Extended: 10 hrs/day (50 hrs/week)</option>
-              <option value="long" data-hours="60">Long: 12 hrs/day (60 hrs/week)</option>
+              <option value="custom" data-hours="15">Custom hours per week</option>
+              <option value="part-time-20" data-hours="20">Part-time: 9am-1pm (20 hrs/week)</option>
+              <option value="part-time-25" data-hours="25">Part-time: 9am-2pm (25 hrs/week)</option>
+              <option value="part-time-30" data-hours="30">Part-time: 9am-3pm (30 hrs/week)</option>
+              <option value="standard" data-hours="40" selected>Standard: 9am-5pm (40 hrs/week)</option>
+              <option value="extended-45" data-hours="45">Extended: 8am-5pm (45 hrs/week)</option>
+              <option value="extended-50" data-hours="50">Extended: 7am-5pm or 8am-6pm (50 hrs/week)</option>
+              <option value="long-55" data-hours="55">Long hours: 7am-6pm (55 hrs/week)</option>
+              <option value="long-60" data-hours="60">Long hours: 7am-7pm (60 hrs/week)</option>
             </select>
             <div class="helper-text">Includes commute time, automatically scheduled Mon-Fri</div>
           </div>
@@ -254,13 +258,14 @@
             <label>Sleep Schedule</label>
             <select id="sleepSchedule" required>
               <option value="">Select your sleep pattern</option>
-              <option value="short" data-hours="42">Short: 6 hrs/night (42 hrs/week)</option>
-              <option value="light" data-hours="49">Light: 7 hrs/night (49 hrs/week)</option>
-              <option value="standard" data-hours="56" selected>Standard: 8 hrs/night (56 hrs/week)</option>
-              <option value="good" data-hours="63">Good: 9 hrs/night (63 hrs/week)</option>
-              <option value="excellent" data-hours="70">Excellent: 10 hrs/night (70 hrs/week)</option>
+              <option value="custom" data-hours="30">Custom hours per week</option>
+              <option value="short" data-hours="35">Short: 11:30pm-6:30am (35 hrs/week)</option>
+              <option value="light" data-hours="42">Light: 11pm-6am (42 hrs/week)</option>
+              <option value="average" data-hours="49" selected>Average: 10:30pm-6am (49 hrs/week)</option>
+              <option value="good" data-hours="56">Good: 10pm-6am (56 hrs/week)</option>
+              <option value="extended" data-hours="63">Extended: 9:30pm-6am (63 hrs/week)</option>
             </select>
-            <div class="helper-text">Automatically scheduled every night 11pm-7am (adjusts for your choice)</div>
+            <div class="helper-text">Automatically scheduled every night</div>
           </div>
         </div>
         <button type="submit" class="calculate-btn">Generate Study Plan</button>
@@ -276,10 +281,6 @@
           <div class="stat-box"><div class="stat-label">Daily Avg</div><div class="stat-value" id="dailyHours">0h</div></div>
           <div class="stat-box"><div class="stat-label">Monthly</div><div class="stat-value" id="monthlyHours">0h</div></div>
         </div>
-        <div class="chart-container">
-          <div class="chart-title">Weekly Time Allocation</div>
-          <div class="chart-wrapper"><canvas id="pieChart"></canvas></div>
-        </div>
       </div>
 
       <!-- 🗓️ Weekly Visual Planner -->
@@ -287,7 +288,7 @@
         <h2 style="text-align:center; color:#212529; margin-bottom:20px;">🗓️ Your Weekly Schedule Builder</h2>
         <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
           <p style="text-align:center; color:#495057; margin-bottom:15px; font-weight:500;">
-            ✨ <strong>Work & Sleep</strong> are automatically scheduled. Now add your personal commitments and study sessions!
+            ✨ <strong>Work & Sleep</strong> are automatically scheduled. <strong>Schedule your remaining activities using the calendar below.</strong>
           </p>
           <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:15px;">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -300,19 +301,19 @@
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
               <div style="width:16px; height:16px; background:#28a745; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Study (You add)</span>
+              <span style="font-size:14px; color:#495057;">Study</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
               <div style="width:16px; height:16px; background:#ff6b6b; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Family (You add)</span>
+              <span style="font-size:14px; color:#495057;">Family</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
               <div style="width:16px; height:16px; background:#ffc107; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Social (You add)</span>
+              <span style="font-size:14px; color:#495057;">Social</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
               <div style="width:16px; height:16px; background:#96ceb4; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Other (You add)</span>
+              <span style="font-size:14px; color:#495057;">Other</span>
             </div>
           </div>
         </div>
@@ -373,7 +374,6 @@
       document.getElementById('dailyHours').textContent = (available/7).toFixed(1) + 'h';
       document.getElementById('monthlyHours').textContent = (available*4.33).toFixed(0) + 'h';
       
-      createChart(work, sleep, available);
       populateSchedule(workSchedule.value, sleepSchedule.value);
       
       document.getElementById('results').classList.add('show');
@@ -528,10 +528,28 @@
       // Schedule sleep every night
       const sleepHours = getSleepHours(sleepType);
       for(let day = 0; day < 7; day++) { // Every day
-        for(let hour = sleepHours.start; hour <= sleepHours.end; hour++) {
-          let actualHour = hour;
-          if(hour >= 24) actualHour = hour - 24; // Handle midnight crossover
-          const cell = document.querySelector(`[data-day="${day}"][data-hour="${actualHour}"]`);
+        let startHour = sleepHours.start;
+        let endHour = sleepHours.end;
+        
+        // Handle fractional hours (like 10:30pm = 22.5)
+        if(startHour % 1 !== 0) {
+          startHour = Math.floor(startHour);
+        }
+        if(endHour % 1 !== 0) {
+          endHour = Math.ceil(endHour);
+        }
+        
+        // Handle sleep that crosses midnight
+        if(startHour >= 21) { // Evening sleep start
+          for(let hour = startHour; hour < 24; hour++) {
+            const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
+            if(cell) cell.classList.add('sleep');
+          }
+        }
+        
+        // Morning sleep hours
+        for(let hour = 0; hour < endHour; hour++) {
+          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
           if(cell) cell.classList.add('sleep');
         }
       }
@@ -541,24 +559,29 @@
     
     function getWorkHours(workType) {
       const schedules = {
-        'part-time': {start: 9, end: 13},      // 4 hours
-        'short': {start: 9, end: 15},          // 6 hours  
-        'standard': {start: 9, end: 17},       // 8 hours
-        'extended': {start: 8, end: 18},       // 10 hours
-        'long': {start: 8, end: 20}            // 12 hours
+        'custom': {start: 9, end: 12},
+        'part-time-20': {start: 9, end: 13},      // 9am-1pm
+        'part-time-25': {start: 9, end: 14},      // 9am-2pm  
+        'part-time-30': {start: 9, end: 15},      // 9am-3pm
+        'standard': {start: 9, end: 17},          // 9am-5pm
+        'extended-45': {start: 8, end: 17},       // 8am-5pm
+        'extended-50': {start: 7, end: 17},       // 7am-5pm (or 8am-6pm)
+        'long-55': {start: 7, end: 18},           // 7am-6pm
+        'long-60': {start: 7, end: 19}            // 7am-7pm
       };
       return schedules[workType] || schedules.standard;
     }
     
     function getSleepHours(sleepType) {
       const schedules = {
-        'short': {start: 24, end: 6},          // 6 hours (12am-6am)
-        'light': {start: 24, end: 7},          // 7 hours (12am-7am)
-        'standard': {start: 23, end: 7},       // 8 hours (11pm-7am)
-        'good': {start: 22, end: 7},           // 9 hours (10pm-7am)
-        'excellent': {start: 21, end: 7}       // 10 hours (9pm-7am)
+        'custom': {start: 23, end: 6},
+        'short': {start: 23.5, end: 6.5},         // 11:30pm-6:30am
+        'light': {start: 23, end: 6},             // 11pm-6am
+        'average': {start: 22.5, end: 6},         // 10:30pm-6am
+        'good': {start: 22, end: 6},              // 10pm-6am
+        'extended': {start: 21.5, end: 6}         // 9:30pm-6am
       };
-      return schedules[sleepType] || schedules.standard;
+      return schedules[sleepType] || schedules.average;
     }
     function updateStats(){
       const cells=document.querySelectorAll('.grid-cell');
