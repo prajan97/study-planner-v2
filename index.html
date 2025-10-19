@@ -20,6 +20,238 @@
       --card-bg: #2d2d2d;
       --input-bg: #3a3a3a;
     }
+
+    // Add event listeners for calendar interaction
+    function addPlannerEventListeners() {
+      const activitySelect = document.getElementById('activitySelect');
+      const clearPersonal = document.getElementById('clearPersonal');
+      const smartSuggest = document.getElementById('smartSuggest');
+      
+      if(activitySelect) {
+        activitySelect.addEventListener('change', e => {
+          currentActivity = e.target.value;
+        });
+      }
+      
+      if(clearPersonal) {
+        clearPersonal.addEventListener('click', () => {
+          document.querySelectorAll('.grid-cell').forEach(c => {
+            if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
+              c.className = 'grid-cell';
+            }
+          });
+          updateStats();
+        });
+      }
+      
+      if(smartSuggest) {
+        smartSuggest.addEventListener('click', () => {
+          smartSuggestSchedule();
+        });
+      }
+    }
+
+    // Update statistics display and chart
+    function updateStats() {
+      const cells = document.querySelectorAll('.grid-cell');
+      const countBy = {study:0, work:0, sleep:0, commute:0, family:0, social:0, other:0};
+      
+      cells.forEach(c => {
+        if(c.classList.length > 1) {
+          const act = c.classList[1];
+          if(countBy[act] !== undefined) countBy[act]++;
+        }
+      });
+      
+      console.log('Activity counts:', countBy);
+      updateStatsDisplay(countBy);
+      createScheduleChart(countBy);
+    }
+    
+    function updateStatsDisplay(counts) {
+      const statsSection = document.getElementById('statsSection');
+      const statsGrid = document.getElementById('statsGrid');
+      
+      const total = counts.work + counts.sleep + counts.study + counts.commute + counts.family + counts.social + counts.other;
+      const available = 168 - total;
+      
+      statsGrid.innerHTML = `
+        <div class="stat-item">
+          <div class="stat-value" style="color:#e52d27;">${counts.work}h</div>
+          <div class="stat-label">Work</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#6c757d;">${counts.sleep}h</div>
+          <div class="stat-label">Sleep</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#28a745;">${counts.study}h</div>
+          <div class="stat-label">Study</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#fd7e14;">${counts.commute}h</div>
+          <div class="stat-label">Commute</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#6f42c1;">${counts.family}h</div>
+          <div class="stat-label">Family</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#ffc107;">${counts.social}h</div>
+          <div class="stat-label">Social</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#96ceb4;">${counts.other}h</div>
+          <div class="stat-label">Other</div>
+        </div>
+        ${available > 0 ? `<div class="stat-item" style="border: 2px solid #28a745;">
+          <div class="stat-value" style="color:#28a745;">${available}h</div>
+          <div class="stat-label">Free</div>
+        </div>` : ''}
+      `;
+      
+      if(total > counts.work + counts.sleep) {
+        statsSection.classList.add('show');
+      }
+    }
+    
+    function createScheduleChart(counts) {
+      const canvas = document.getElementById('scheduleChart');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      if(scheduleChart) scheduleChart.destroy();
+      
+      const data = [counts.work, counts.sleep, counts.study, counts.commute, counts.family, counts.social, counts.other];
+      const labels = ['Work', 'Sleep', 'Study', 'Commute', 'Family', 'Social', 'Other'];
+      const colors = ['#e52d27', '#6c757d', '#28a745', '#fd7e14', '#6f42c1', '#ffc107', '#96ceb4'];
+      
+      scheduleChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
+    
+    // Helper function to get work days based on pattern
+    function getWorkDays(workPattern) {
+      const patterns = {
+        'office-5': [0, 1, 2, 3, 4],        // Mon-Fri
+        'office-4': [0, 1, 2, 3],           // Mon-Thu
+        'office-3': [0, 2, 4],              // Mon, Wed, Fri
+        'office-2': [1, 3],                 // Tue, Thu
+        'hybrid-alt': [0, 2, 4],            // Mon, Wed, Fri
+        'remote': [],                       // No office days
+        'irregular': [0, 2, 4]              // Default to 3 days
+      };
+      return patterns[workPattern] || patterns['office-5'];
+    }
+    
+    // Helper function to get work hours based on schedule type
+    function getWorkHours(workType) {
+      const schedules = {
+        'none': {start: 9, end: 9},
+        'part-time-16': {start: 9, end: 13},
+        'part-time-20': {start: 9, end: 13},
+        'part-time-24': {start: 9, end: 15},
+        'standard': {start: 9, end: 17},
+        'extended-40': {start: 8, end: 17},
+        'extended-45': {start: 7, end: 17},
+        'long-50': {start: 7, end: 18},
+        'long-55': {start: 7, end: 19},
+        'custom': {start: 9, end: 13}
+      };
+      return schedules[workType] || schedules.standard;
+    }
+    
+    // Helper function to get sleep hours based on schedule type
+    function getSleepHours(sleepType) {
+      const schedules = {
+        'custom': {start: 23, end: 6},
+        'short': {start: 23.5, end: 6.5},
+        'light': {start: 23, end: 6},
+        'average': {start: 22.5, end: 6},
+        'good': {start: 22, end: 6},
+        'extended': {start: 21.5, end: 6}
+      };
+      return schedules[sleepType] || schedules.average;
+    }
+    
+    // Populate schedule based on user selections
+    function populateSchedule(workType, workPattern, sleepType) {
+      console.log('populateSchedule called with:', workType, workPattern, sleepType);
+      
+      // Clear all existing schedule
+      document.querySelectorAll('.grid-cell').forEach(c => c.className = 'grid-cell');
+      
+      // Schedule work based on pattern
+      const workHours = getWorkHours(workType);
+      const workDays = getWorkDays(workPattern);
+      
+      console.log('Work hours:', workHours, 'Work days:', workDays);
+      
+      workDays.forEach(day => {
+        for(let hour = workHours.start; hour < workHours.end; hour++) {
+          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
+          if(cell) {
+            cell.classList.add('work');
+          }
+        }
+      });
+      
+      // Schedule sleep every night
+      const sleepHours = getSleepHours(sleepType);
+      console.log('Sleep hours:', sleepHours);
+      
+      for(let day = 0; day < 7; day++) {
+        let startHour = sleepHours.start;
+        let endHour = sleepHours.end;
+        
+        // Handle fractional hours
+        if(startHour % 1 !== 0) {
+          startHour = Math.floor(startHour);
+        }
+        if(endHour % 1 !== 0) {
+          endHour = Math.ceil(endHour);
+        }
+        
+        // Handle sleep that crosses midnight
+        if(startHour >= 21) {
+          for(let hour = startHour; hour < 24; hour++) {
+            const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
+            if(cell) {
+              cell.classList.add('sleep');
+            }
+          }
+        }
+        
+        // Morning sleep hours
+        for(let hour = 0; hour < endHour; hour++) {
+          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
+          if(cell) {
+            cell.classList.add('sleep');
+          }
+        }
+      }
+      
+      console.log('Schedule populated, calling updateStats');
+      updateStats();
+    }
     
     [data-theme="light"] {
       --bg-primary: #f8f9fa;
