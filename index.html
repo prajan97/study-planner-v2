@@ -9,349 +9,486 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+      background: #f8f9fa;
       min-height: 100vh;
-      padding: 20px;
+      color: #212529;
     }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 30px 90px rgba(0,0,0,0.3);
-      overflow: hidden;
-    }
+    
     .header {
       background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
       color: white;
-      padding: 60px 40px;
+      padding: 40px 0;
       text-align: center;
+      box-shadow: 0 4px 20px rgba(229, 45, 39, 0.3);
     }
-    .header h1 { font-size: 36px; margin-bottom: 12px; font-weight: 700; }
-    .header .subtitle { font-size: 18px; opacity: 0.95; }
-    .header .uni-name { margin-top: 15px; font-size: 13px; font-weight: 600; letter-spacing: 2px; opacity: 0.85; }
-    .content { padding: 50px 40px; }
+    .header h1 { font-size: 32px; margin-bottom: 8px; font-weight: 700; }
+    .header .subtitle { font-size: 16px; opacity: 0.95; }
+    .header .uni-name { margin-top: 12px; font-size: 12px; font-weight: 600; letter-spacing: 2px; opacity: 0.85; }
+    
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 30px;
+      min-height: calc(100vh - 200px);
+    }
+    
+    @media (max-width: 1200px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+    
+    .left-panel {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 1px solid #e9ecef;
+      height: fit-content;
+      position: sticky;
+      top: 30px;
+    }
+    
+    .right-panel {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 1px solid #e9ecef;
+      min-height: 600px;
+    }
+    
+    .panel-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212529;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
     .intro-text {
       background: #f8f9fa;
-      padding: 24px;
+      padding: 20px;
       border-radius: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       border-left: 4px solid #e52d27;
       color: #495057;
-      line-height: 1.7;
+      line-height: 1.6;
+      font-size: 14px;
     }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-bottom: 30px;
+    
+    .input-group { 
+      margin-bottom: 25px;
     }
-    .input-group { position: relative; }
+    
     label {
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-weight: 600;
       color: #212529;
-      font-size: 15px;
+      font-size: 14px;
     }
+    
     select, input[type="number"] {
       width: 100%;
-      padding: 16px;
+      padding: 14px 16px;
       border: 2px solid #dee2e6;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 15px;
       transition: all 0.3s ease;
       background: white;
       font-weight: 500;
     }
+    
     select:focus, input[type="number"]:focus {
       outline: none;
       border-color: #e52d27;
       box-shadow: 0 0 0 4px rgba(229, 45, 39, 0.1);
     }
-    .helper-text { font-size: 13px; color: #6c757d; margin-top: 6px; }
-    .work-schedule-insight {
-      background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f2 100%);
-      padding: 16px;
-      border-radius: 8px;
-      margin-top: 10px;
-      border-left: 3px solid #17a2b8;
-      font-size: 14px;
-      color: #0c5460;
-      font-weight: 500;
+    
+    .helper-text { 
+      font-size: 12px; 
+      color: #6c757d; 
+      margin-top: 6px; 
+      line-height: 1.4;
     }
+    
     .calculate-btn {
       width: 100%;
-      padding: 18px;
+      padding: 16px;
       background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
       color: white;
       border: none;
       border-radius: 12px;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
       margin-top: 20px;
-      box-shadow: 0 8px 20px rgba(229, 45, 39, 0.25);
+      box-shadow: 0 6px 20px rgba(229, 45, 39, 0.25);
     }
+    
     .calculate-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(229, 45, 39, 0.35);
+      box-shadow: 0 8px 25px rgba(229, 45, 39, 0.35);
     }
-    .results {
-      margin-top: 40px;
+    
+    .schedule-info {
+      background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f2 100%);
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border-left: 3px solid #17a2b8;
+      font-size: 13px;
+      color: #0c5460;
+      font-weight: 500;
       display: none;
-      animation: fadeInUp 0.6s ease-out;
     }
-    .results.show { display: block; }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    
+    .schedule-info.show { display: block; }
+    
+    .calendar-container {
+      display: none;
     }
-    .results-header { text-align: center; margin-bottom: 40px; }
-    .results-header h2 { font-size: 32px; color: #212529; margin-bottom: 8px; font-weight: 700; }
-    .stats-showcase {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-    .stat-box {
-      background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-      padding: 24px;
-      border-radius: 12px;
-      text-align: center;
-      border: 2px solid #e9ecef;
-      transition: all 0.3s ease;
-    }
-    .stat-box:hover {
-      border-color: #e52d27;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-    .stat-label {
-      font-size: 12px;
-      color: #6c757d;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
-    }
-    .stat-value { font-size: 36px; font-weight: 800; color: #e52d27; }
-    .chart-container { background: #f8f9fa; padding: 30px; border-radius: 16px; margin: 40px auto; max-width: 600px; }
-    .chart-title { font-size: 16px; font-weight: 700; color: #212529; margin-bottom: 20px; text-align: center; }
-    .chart-wrapper { position: relative; height: 280px; }
-    .recommendation {
-      background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-      padding: 35px;
-      border-radius: 16px;
-      border-left: 6px solid #e52d27;
-      margin-bottom: 30px;
-    }
-    .recommendation-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #e52d27;
-      margin-bottom: 16px;
-    }
-    .programme-suggestions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .programme-card {
-      background: white;
+    
+    .calendar-container.show { display: block; }
+    
+    .calendar-header {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       padding: 20px;
       border-radius: 12px;
-      border: 2px solid #e52d27;
-      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      text-align: center;
     }
-    .programme-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(229,45,39,0.2); }
-    .programme-name { font-size: 16px; font-weight: 700; color: #e52d27; margin-bottom: 8px; }
-    .programme-details { font-size: 14px; color: #495057; line-height: 1.6; }
+    
+    .calendar-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .activity-select-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .activity-select-group label {
+      font-weight: 600;
+      color: #212529;
+      margin: 0;
+      white-space: nowrap;
+    }
+    
+    .control-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
     .btn {
-      padding: 16px 24px;
-      border-radius: 10px;
-      font-size: 16px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
       border: none;
       text-align: center;
+      white-space: nowrap;
     }
+    
     .btn-primary {
       background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
       color: white;
       box-shadow: 0 4px 12px rgba(229,45,39,0.25);
     }
+    
     .btn-secondary {
       background: white;
       color: #e52d27;
       border: 2px solid #e52d27;
     }
-    .btn-secondary:hover { background: #e52d27; color: white; }
-    /* Weekly grid styles */
+    
+    .btn-secondary:hover { 
+      background: #e52d27; 
+      color: white; 
+    }
+    
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #495057;
+    }
+    
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+    
+    .calendar-grid {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid #e9ecef;
+    }
+    
     .weekly-grid {
       display: grid;
       grid-template-columns: 60px repeat(7, 1fr);
-      grid-auto-rows: 26px;
-      border: 1px solid #dee2e6;
+      grid-auto-rows: 22px;
       user-select: none;
-      margin-top: 15px;
     }
+    
     .grid-header {
       background: #f8f9fa;
       border: 1px solid #dee2e6;
-      font-size: 12px;
+      font-size: 11px;
       text-align: center;
-      line-height: 26px;
+      line-height: 22px;
       font-weight: 600;
+      color: #495057;
     }
+    
     .grid-cell {
       border: 1px solid #f1f1f1;
       text-align: center;
       cursor: pointer;
-      transition: background 0.15s ease;
-      font-size: 11px;
+      transition: all 0.15s ease;
+      font-size: 10px;
+      line-height: 22px;
     }
+    
+    .grid-cell:hover:not(.work):not(.sleep) { 
+      background: rgba(229, 45, 39, 0.1);
+    }
+    
     .grid-cell.study { background: #28a745; color: white; }
     .grid-cell.work { background: #e52d27; color: white; }
     .grid-cell.sleep { background: #6c757d; color: white; }
     .grid-cell.family { background: #ff6b6b; color: white; }
     .grid-cell.social { background: #ffc107; color: #212529; font-weight:600; }
     .grid-cell.other { background: #96ceb4; color: white; }
-    .grid-cell:hover { opacity: 0.85; }
+    
+    .stats-section {
+      margin-top: 25px;
+      display: none;
+    }
+    
+    .stats-section.show { display: block; }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-item {
+      text-align: center;
+      padding: 12px 8px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+    
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .chart-container {
+      max-width: 300px;
+      margin: 0 auto;
+      height: 200px;
+    }
+    
+    .usage-tip {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #856404;
+      margin-bottom: 15px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Study Planner</h1>
-      <div class="subtitle">Realistic recommendations for your schedule</div>
-      <div class="uni-name">KING'S COLLEGE LONDON</div>
-    </div>
-    <div class="content">
-      <div class="intro-text">
-        <p><strong>Get realistic study recommendations.</strong> Finding your available study time by factoring in commutes, downtime, and commitments.</p>
+  <div class="header">
+    <h1>📚 Study Planner</h1>
+    <div class="subtitle">Realistic recommendations for your schedule</div>
+    <div class="uni-name">KING'S COLLEGE LONDON</div>
+  </div>
+
+  <div class="main-container">
+    <!-- Left Panel: Form Controls -->
+    <div class="left-panel">
+      <div class="panel-title">
+        ⚙️ Schedule Settings
       </div>
+      
+      <div class="intro-text">
+        <strong>Get realistic study recommendations</strong> by factoring in your actual work and sleep commitments.
+      </div>
+      
       <form id="calculatorForm">
-        <!-- existing form fields -->
-        <div class="form-grid">
-          <div class="input-group">
-            <label>Work & Commute Schedule</label>
-            <select id="workSchedule" required>
-              <option value="">Select your work schedule</option>
-              <option value="custom" data-hours="15">Custom hours per week</option>
-              <option value="part-time-20" data-hours="20">Part-time: 9am-1pm (20 hrs/week)</option>
-              <option value="part-time-25" data-hours="25">Part-time: 9am-2pm (25 hrs/week)</option>
-              <option value="part-time-30" data-hours="30">Part-time: 9am-3pm (30 hrs/week)</option>
-              <option value="standard" data-hours="40" selected>Standard: 9am-5pm (40 hrs/week)</option>
-              <option value="extended-45" data-hours="45">Extended: 8am-5pm (45 hrs/week)</option>
-              <option value="extended-50" data-hours="50">Extended: 7am-5pm or 8am-6pm (50 hrs/week)</option>
-              <option value="long-55" data-hours="55">Long hours: 7am-6pm (55 hrs/week)</option>
-              <option value="long-60" data-hours="60">Long hours: 7am-7pm (60 hrs/week)</option>
-            </select>
-            <div class="helper-text">Includes commute time, automatically scheduled Mon-Fri</div>
-          </div>
-          <div class="input-group">
-            <label>Sleep Schedule</label>
-            <select id="sleepSchedule" required>
-              <option value="">Select your sleep pattern</option>
-              <option value="custom" data-hours="30">Custom hours per week</option>
-              <option value="short" data-hours="35">Short: 11:30pm-6:30am (35 hrs/week)</option>
-              <option value="light" data-hours="42">Light: 11pm-6am (42 hrs/week)</option>
-              <option value="average" data-hours="49" selected>Average: 10:30pm-6am (49 hrs/week)</option>
-              <option value="good" data-hours="56">Good: 10pm-6am (56 hrs/week)</option>
-              <option value="extended" data-hours="63">Extended: 9:30pm-6am (63 hrs/week)</option>
-            </select>
-            <div class="helper-text">Automatically scheduled every night</div>
-          </div>
+        <div class="input-group">
+          <label>🏢 Work & Commute Schedule</label>
+          <select id="workSchedule" required>
+            <option value="">Select your work schedule</option>
+            <option value="custom" data-hours="15">Custom hours per week</option>
+            <option value="part-time-20" data-hours="20">Part-time: 9am-1pm (20 hrs/week)</option>
+            <option value="part-time-25" data-hours="25">Part-time: 9am-2pm (25 hrs/week)</option>
+            <option value="part-time-30" data-hours="30">Part-time: 9am-3pm (30 hrs/week)</option>
+            <option value="standard" data-hours="40" selected>Standard: 9am-5pm (40 hrs/week)</option>
+            <option value="extended-45" data-hours="45">Extended: 8am-5pm (45 hrs/week)</option>
+            <option value="extended-50" data-hours="50">Extended: 7am-5pm or 8am-6pm (50 hrs/week)</option>
+            <option value="long-55" data-hours="55">Long hours: 7am-6pm (55 hrs/week)</option>
+            <option value="long-60" data-hours="60">Long hours: 7am-7pm (60 hrs/week)</option>
+          </select>
+          <div class="helper-text">Includes commute time, automatically scheduled Mon-Fri</div>
         </div>
-        <button type="submit" class="calculate-btn">Generate Study Plan</button>
+
+        <div class="input-group">
+          <label>😴 Sleep Schedule</label>
+          <select id="sleepSchedule" required>
+            <option value="">Select your sleep pattern</option>
+            <option value="custom" data-hours="30">Custom hours per week</option>
+            <option value="short" data-hours="35">Short: 11:30pm-6:30am (35 hrs/week)</option>
+            <option value="light" data-hours="42">Light: 11pm-6am (42 hrs/week)</option>
+            <option value="average" data-hours="49" selected>Average: 10:30pm-6am (49 hrs/week)</option>
+            <option value="good" data-hours="56">Good: 10pm-6am (56 hrs/week)</option>
+            <option value="extended" data-hours="63">Extended: 9:30pm-6am (63 hrs/week)</option>
+          </select>
+          <div class="helper-text">Automatically scheduled every night</div>
+        </div>
+
+        <button type="submit" class="calculate-btn">📊 Generate Study Plan</button>
       </form>
 
-      <div id="results" class="results">
-        <div class="results-header">
-          <h2>Your Realistic Study Plan</h2>
-          <p>Based on your actual schedule</p>
-        </div>
+      <div id="scheduleInfo" class="schedule-info">
+        <div style="font-weight: 600; margin-bottom: 8px;">📋 Schedule Overview</div>
+        <div id="scheduleBreakdown"></div>
       </div>
 
-      <!-- 🗓️ Weekly Visual Planner -->
-      <div id="visualPlanner" style="display:none; margin-top:40px;">
-        <h2 style="text-align:center; color:#212529; margin-bottom:20px;">🗓️ Your Weekly Schedule Builder</h2>
-        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-          <p style="text-align:center; color:#495057; margin-bottom:15px; font-weight:500;">
-            ✨ <strong>Work & Sleep</strong> are automatically scheduled. <strong>Schedule your remaining activities using the calendar below.</strong>
+      <!-- Stats Section -->
+      <div id="statsSection" class="stats-section">
+        <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center;">📊 Weekly Breakdown</div>
+        <div id="statsGrid" class="stats-grid"></div>
+        <div class="chart-container">
+          <canvas id="scheduleChart" width="300" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Calendar -->
+    <div class="right-panel">
+      <div class="panel-title">
+        🗓️ Interactive Schedule Builder
+      </div>
+      
+      <div id="calendarContainer" class="calendar-container">
+        <div class="calendar-header">
+          <p style="color:#495057; margin-bottom:15px; font-weight:500;">
+            ✨ <strong>Work & Sleep</strong> are pre-filled. Schedule your remaining activities below.
           </p>
-          <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:15px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:16px; height:16px; background:#e52d27; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Work (Auto)</span>
+          
+          <div class="legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background:#e52d27;"></div>
+              <span>Work (Auto)</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:16px; height:16px; background:#6c757d; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Sleep (Auto)</span>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#6c757d;"></div>
+              <span>Sleep (Auto)</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:16px; height:16px; background:#28a745; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Study</span>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#28a745;"></div>
+              <span>Study</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:16px; height:16px; background:#ff6b6b; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Family</span>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#ff6b6b;"></div>
+              <span>Family</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:16px; height:16px; background:#ffc107; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Social</span>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#ffc107;"></div>
+              <span>Social</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:16px; height:16px; background:#96ceb4; border-radius:3px;"></div>
-              <span style="font-size:14px; color:#495057;">Other</span>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#96ceb4;"></div>
+              <span>Other</span>
             </div>
           </div>
         </div>
         
-        <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-bottom:20px; flex-wrap:wrap;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <label style="font-weight:600; color:#212529;">🎨 Paint with:</label>
-            <select id="activitySelect" style="padding:10px 16px; border-radius:10px; border:2px solid #dee2e6; font-size:16px; background:white; min-width:200px;">
+        <div class="calendar-controls">
+          <div class="activity-select-group">
+            <label>🎨 Paint with:</label>
+            <select id="activitySelect" style="padding:8px 12px; border-radius:8px; border:2px solid #dee2e6; font-size:14px; background:white;">
               <option value="study" selected>📚 Study Sessions</option>
               <option value="family">👨‍👩‍👧‍👦 Family Time</option>
               <option value="social">🎉 Social & Fun</option>
               <option value="other">📋 Other Commitments</option>
             </select>
           </div>
-          <div style="display:flex; gap:10px;">
-            <button id="clearAll" class="btn btn-secondary" style="padding:10px 20px;">🧹 Clear All</button>
-            <button id="clearPersonal" class="btn btn-secondary" style="padding:10px 20px;">🎨 Clear Personal Only</button>
-            <button id="smartSuggest" class="btn btn-primary" style="padding:10px 20px;">✨ Smart Suggestions</button>
+          
+          <div class="control-buttons">
+            <button id="clearPersonal" class="btn btn-secondary">🎨 Clear Personal</button>
+            <button id="smartSuggest" class="btn btn-primary">✨ Smart Fill</button>
           </div>
         </div>
         
-        <div style="background:white; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-          <p style="text-align:center; margin-bottom:15px; color:#6c757d; font-style:italic;">
-            💡 <strong>Tip:</strong> Click and drag to quickly fill time slots. Right-click to remove activities.
-          </p>
+        <div class="usage-tip">
+          💡 <strong>Tip:</strong> Click and drag to fill time slots. Right-click to remove activities.
+        </div>
+        
+        <div class="calendar-grid">
           <div id="weeklyGrid" class="weekly-grid"></div>
         </div>
-        
-        <div id="scheduleStats" style="display:none; margin-top:20px;">
-          <div style="background:white; padding:25px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-            <h3 style="color:#212529; margin-bottom:20px; text-align:center;">📊 Your Weekly Schedule Breakdown</h3>
-            <div style="max-width:400px; margin:0 auto;">
-              <canvas id="scheduleChart" width="400" height="300"></canvas>
-            </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:15px; margin-top:20px;" id="activityBreakdown"></div>
-          </div>
-        </div>
+      </div>
+
+      <!-- Placeholder when no schedule generated -->
+      <div id="calendarPlaceholder" style="text-align: center; padding: 80px 20px; color: #6c757d;">
+        <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
+        <h3 style="margin-bottom: 12px; color: #495057;">Your Schedule Will Appear Here</h3>
+        <p>Select your work and sleep schedules on the left to get started.</p>
       </div>
     </div>
   </div>
 
   <script>
-    // existing calculator
+    // Form submission
     document.getElementById('calculatorForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -370,130 +507,124 @@
       let available = 168 - totalCommitted;
       if (available < 0) available = 0;
       
+      // Show schedule info
+      const scheduleInfo = document.getElementById('scheduleInfo');
+      const breakdown = document.getElementById('scheduleBreakdown');
+      breakdown.innerHTML = `
+        <div>🏢 Work: <strong>${work} hours/week</strong></div>
+        <div>😴 Sleep: <strong>${sleep} hours/week</strong></div>
+        <div style="color: #28a745; font-weight: 600;">⏰ Available: <strong>${available} hours/week</strong></div>
+      `;
+      scheduleInfo.classList.add('show');
+      
+      // Initialize and populate calendar
       populateSchedule(workSchedule.value, sleepSchedule.value);
       
-      document.getElementById('results').classList.add('show');
-      document.getElementById('visualPlanner').style.display='block';
+      // Show calendar
+      document.getElementById('calendarPlaceholder').style.display = 'none';
+      document.getElementById('calendarContainer').classList.add('show');
       
-      // Add event listeners for planner after it's visible
+      // Add event listeners
       setTimeout(() => {
         addPlannerEventListeners();
-        document.getElementById('results').scrollIntoView({behavior:'smooth'});
       }, 100);
     });
 
-    let pieChart;
-    function createChart(work, sleep, available){
-      const ctx=document.getElementById('pieChart').getContext('2d');
-      if(pieChart) pieChart.destroy();
-      pieChart=new Chart(ctx,{
-        type:'doughnut',
-        data:{
-          labels:['Work & Commute','Sleep','Available for Study'],
-          datasets:[{data:[work, sleep, available],
-            backgroundColor:['#e52d27','#6c757d','#28a745'],
-            borderWidth:0}]},
-        options:{plugins:{legend:{position:'bottom'}}}
-      });
-    }
+    let scheduleChart;
+    let isDragging = false;
+    let currentActivity = 'study';
 
-    // Weekly grid logic
+    // Initialize grid
     function initWeeklyGrid() {
-      const grid=document.getElementById('weeklyGrid');
-      const days=['Time','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-      grid.innerHTML='';
-      days.forEach(d=>{
-        const div=document.createElement('div');
-        div.className='grid-header';
-        div.textContent=d;
+      const grid = document.getElementById('weeklyGrid');
+      const days = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      grid.innerHTML = '';
+      
+      days.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'grid-header';
+        div.textContent = d;
         grid.appendChild(div);
       });
-      for(let hour=0;hour<24;hour++){
-        const label=document.createElement('div');
-        label.className='grid-header';
-        label.textContent=`${hour}:00`;
+      
+      for(let hour = 0; hour < 24; hour++) {
+        const label = document.createElement('div');
+        label.className = 'grid-header';
+        label.textContent = `${hour}:00`;
         grid.appendChild(label);
-        for(let day=0;day<7;day++){
-          const cell=document.createElement('div');
-          cell.className='grid-cell';
-          cell.dataset.day=day; cell.dataset.hour=hour;
-          cell.addEventListener('mousedown',handleCellClick);
-          cell.addEventListener('mouseover',handleCellDrag);
+        
+        for(let day = 0; day < 7; day++) {
+          const cell = document.createElement('div');
+          cell.className = 'grid-cell';
+          cell.dataset.day = day;
+          cell.dataset.hour = hour;
+          cell.addEventListener('mousedown', handleCellClick);
+          cell.addEventListener('mouseover', handleCellDrag);
           grid.appendChild(cell);
         }
       }
     }
-    let isDragging=false; let currentActivity='study';
-    document.addEventListener('mousedown',()=>isDragging=true);
-    document.addEventListener('mouseup',()=>isDragging=false);
+
+    // Mouse event handlers
+    document.addEventListener('mousedown', () => isDragging = true);
+    document.addEventListener('mouseup', () => isDragging = false);
     
-    function handleCellClick(e){
-      const cell=e.target;
-      if(e.button === 2) { // Right click to remove
-        cell.className='grid-cell';
+    function handleCellClick(e) {
+      const cell = e.target;
+      if(e.button === 2) {
+        cell.className = 'grid-cell';
         updateStats();
         return;
       }
       
-      // Don't allow overwriting work/sleep
       if(cell.classList.contains('work') || cell.classList.contains('sleep')) {
         return;
       }
       
-      const activity=currentActivity;
-      const wasSelected=cell.classList.contains(activity);
-      cell.className='grid-cell';
+      const activity = currentActivity;
+      const wasSelected = cell.classList.contains(activity);
+      cell.className = 'grid-cell';
       if(!wasSelected) cell.classList.add(activity);
       updateStats();
     }
     
-    function handleCellDrag(e){
+    function handleCellDrag(e) {
       if(!isDragging) return;
-      const cell=e.target;
+      const cell = e.target;
       if(!cell.classList.contains('grid-cell')) return;
       
-      // Don't allow overwriting work/sleep
       if(cell.classList.contains('work') || cell.classList.contains('sleep')) {
         return;
       }
       
-      cell.className='grid-cell '+currentActivity;
+      cell.className = 'grid-cell ' + currentActivity;
       updateStats();
     }
     
-    // Prevent context menu on right click
+    // Prevent context menu
     document.addEventListener('contextmenu', e => {
       if(e.target.classList.contains('grid-cell')) {
         e.preventDefault();
       }
     });
-    // Add event listeners only after elements exist
+
+    // Add event listeners
     function addPlannerEventListeners() {
       const activitySelect = document.getElementById('activitySelect');
-      const clearAll = document.getElementById('clearAll');
       const clearPersonal = document.getElementById('clearPersonal');
       const smartSuggest = document.getElementById('smartSuggest');
       
       if(activitySelect) {
-        activitySelect.addEventListener('change',e=>{
-          currentActivity=e.target.value;
-        });
-      }
-      
-      if(clearAll) {
-        clearAll.addEventListener('click',()=>{
-          if(confirm('This will clear your entire schedule. Are you sure?')) {
-            document.querySelectorAll('.grid-cell').forEach(c=>c.className='grid-cell');
-            updateStats();
-          }
+        activitySelect.addEventListener('change', e => {
+          currentActivity = e.target.value;
         });
       }
       
       if(clearPersonal) {
-        clearPersonal.addEventListener('click',()=>{
-          document.querySelectorAll('.grid-cell').forEach(c=>{
+        clearPersonal.addEventListener('click', () => {
+          document.querySelectorAll('.grid-cell').forEach(c => {
             if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
-              c.className='grid-cell';
+              c.className = 'grid-cell';
             }
           });
           updateStats();
@@ -501,20 +632,19 @@
       }
       
       if(smartSuggest) {
-        smartSuggest.addEventListener('click',()=>{
+        smartSuggest.addEventListener('click', () => {
           smartSuggestSchedule();
         });
       }
     }
     
-    // Auto-populate schedule based on selections
+    // Populate schedule
     function populateSchedule(workType, sleepType) {
-      // Clear existing schedule first
-      document.querySelectorAll('.grid-cell').forEach(c=>c.className='grid-cell');
+      document.querySelectorAll('.grid-cell').forEach(c => c.className = 'grid-cell');
       
       // Schedule work Monday-Friday
       const workHours = getWorkHours(workType);
-      for(let day = 0; day < 5; day++) { // Mon-Fri
+      for(let day = 0; day < 5; day++) {
         for(let hour = workHours.start; hour < workHours.end; hour++) {
           const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
           if(cell) cell.classList.add('work');
@@ -523,11 +653,10 @@
       
       // Schedule sleep every night
       const sleepHours = getSleepHours(sleepType);
-      for(let day = 0; day < 7; day++) { // Every day
+      for(let day = 0; day < 7; day++) {
         let startHour = sleepHours.start;
         let endHour = sleepHours.end;
         
-        // Handle fractional hours (like 10:30pm = 22.5)
         if(startHour % 1 !== 0) {
           startHour = Math.floor(startHour);
         }
@@ -535,15 +664,13 @@
           endHour = Math.ceil(endHour);
         }
         
-        // Handle sleep that crosses midnight
-        if(startHour >= 21) { // Evening sleep start
+        if(startHour >= 21) {
           for(let hour = startHour; hour < 24; hour++) {
             const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
             if(cell) cell.classList.add('sleep');
           }
         }
         
-        // Morning sleep hours
         for(let hour = 0; hour < endHour; hour++) {
           const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
           if(cell) cell.classList.add('sleep');
@@ -556,14 +683,14 @@
     function getWorkHours(workType) {
       const schedules = {
         'custom': {start: 9, end: 12},
-        'part-time-20': {start: 9, end: 13},      // 9am-1pm
-        'part-time-25': {start: 9, end: 14},      // 9am-2pm  
-        'part-time-30': {start: 9, end: 15},      // 9am-3pm
-        'standard': {start: 9, end: 17},          // 9am-5pm
-        'extended-45': {start: 8, end: 17},       // 8am-5pm
-        'extended-50': {start: 7, end: 17},       // 7am-5pm (or 8am-6pm)
-        'long-55': {start: 7, end: 18},           // 7am-6pm
-        'long-60': {start: 7, end: 19}            // 7am-7pm
+        'part-time-20': {start: 9, end: 13},
+        'part-time-25': {start: 9, end: 14},
+        'part-time-30': {start: 9, end: 15},
+        'standard': {start: 9, end: 17},
+        'extended-45': {start: 8, end: 17},
+        'extended-50': {start: 7, end: 17},
+        'long-55': {start: 7, end: 18},
+        'long-60': {start: 7, end: 19}
       };
       return schedules[workType] || schedules.standard;
     }
@@ -571,30 +698,73 @@
     function getSleepHours(sleepType) {
       const schedules = {
         'custom': {start: 23, end: 6},
-        'short': {start: 23.5, end: 6.5},         // 11:30pm-6:30am
-        'light': {start: 23, end: 6},             // 11pm-6am
-        'average': {start: 22.5, end: 6},         // 10:30pm-6am
-        'good': {start: 22, end: 6},              // 10pm-6am
-        'extended': {start: 21.5, end: 6}         // 9:30pm-6am
+        'short': {start: 23.5, end: 6.5},
+        'light': {start: 23, end: 6},
+        'average': {start: 22.5, end: 6},
+        'good': {start: 22, end: 6},
+        'extended': {start: 21.5, end: 6}
       };
       return schedules[sleepType] || schedules.average;
     }
-    function updateStats(){
-      const cells=document.querySelectorAll('.grid-cell');
-      const countBy={study:0,work:0,sleep:0,family:0,social:0,other:0};
-      cells.forEach(c=>{
-        if(c.classList.length>1){
-          const act=c.classList[1];
+
+    function updateStats() {
+      const cells = document.querySelectorAll('.grid-cell');
+      const countBy = {study:0, work:0, sleep:0, family:0, social:0, other:0};
+      
+      cells.forEach(c => {
+        if(c.classList.length > 1) {
+          const act = c.classList[1];
           if(countBy[act] !== undefined) countBy[act]++;
         }
       });
       
-      // Update detailed breakdown and show chart
-      updateActivityBreakdown(countBy);
+      updateStatsDisplay(countBy);
       createScheduleChart(countBy);
     }
     
-    let scheduleChart;
+    function updateStatsDisplay(counts) {
+      const statsSection = document.getElementById('statsSection');
+      const statsGrid = document.getElementById('statsGrid');
+      
+      const total = counts.work + counts.sleep + counts.study + counts.family + counts.social + counts.other;
+      const available = 168 - total;
+      
+      statsGrid.innerHTML = `
+        <div class="stat-item">
+          <div class="stat-value" style="color:#e52d27;">${counts.work}h</div>
+          <div class="stat-label">Work</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#6c757d;">${counts.sleep}h</div>
+          <div class="stat-label">Sleep</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#28a745;">${counts.study}h</div>
+          <div class="stat-label">Study</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#ff6b6b;">${counts.family}h</div>
+          <div class="stat-label">Family</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#ffc107;">${counts.social}h</div>
+          <div class="stat-label">Social</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#96ceb4;">${counts.other}h</div>
+          <div class="stat-label">Other</div>
+        </div>
+        ${available > 0 ? `<div class="stat-item" style="border: 2px solid #28a745;">
+          <div class="stat-value" style="color:#28a745;">${available}h</div>
+          <div class="stat-label">Free</div>
+        </div>` : ''}
+      `;
+      
+      if(total > counts.work + counts.sleep) {
+        statsSection.classList.add('show');
+      }
+    }
+    
     function createScheduleChart(counts) {
       const canvas = document.getElementById('scheduleChart');
       if (!canvas) return;
@@ -621,92 +791,44 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: 'bottom',
-              labels: {
-                padding: 15,
-                usePointStyle: true
-              }
+              display: false
             }
           }
         }
       });
     }
     
-    function updateActivityBreakdown(counts) {
-      const breakdown = document.getElementById('activityBreakdown');
-      const stats = document.getElementById('scheduleStats');
-      
-      const total = counts.work + counts.sleep + counts.study + counts.family + counts.social + counts.other;
-      const available = 168 - total;
-      
-      breakdown.innerHTML = `
-        <div style="text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:#e52d27;">${counts.work}h</div>
-          <div style="font-size:12px; color:#666;">Work</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:#6c757d;">${counts.sleep}h</div>
-          <div style="font-size:12px; color:#666;">Sleep</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:#28a745;">${counts.study}h</div>
-          <div style="font-size:12px; color:#666;">Study</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:#ff6b6b;">${counts.family}h</div>
-          <div style="font-size:12px; color:#666;">Family</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:#ffc107;">${counts.social}h</div>
-          <div style="font-size:12px; color:#666;">Social</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:#96ceb4;">${counts.other}h</div>
-          <div style="font-size:12px; color:#666;">Other</div>
-        </div>
-        ${available > 0 ? `<div style="text-align:center; border-left:2px solid #28a745; padding-left:10px;">
-          <div style="font-size:20px; font-weight:700; color:#28a745;">${available}h</div>
-          <div style="font-size:12px; color:#666;">Free Time</div>
-        </div>` : ''}
-      `;
-      
-      // Show stats only if there's some activity scheduled
-      if(total > counts.work + counts.sleep) {
-        stats.style.display = 'block';
-      }
-    }
-    
     function smartSuggestSchedule() {
       // Clear personal commitments first
-      document.querySelectorAll('.grid-cell').forEach(c=>{
+      document.querySelectorAll('.grid-cell').forEach(c => {
         if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
-          c.className='grid-cell';
+          c.className = 'grid-cell';
         }
       });
       
-      // Realistic suggestions showing trade-offs - prioritizing study time
+      // Smart suggestions for balanced schedule
       const suggestions = [
-        // Study sessions - 20-25 hours total (more realistic for serious students)
-        {activity: 'study', days: [0,1,2,3,4], hours: [7,8], weight: 0.8}, // Early morning study sacrifice
-        {activity: 'study', days: [0,1,2,3,4], hours: [18,19,20], weight: 0.9}, // Evening study instead of leisure
-        {activity: 'study', days: [5,6], hours: [9,10,11,14,15,16], weight: 0.8}, // Weekend study blocks
-        {activity: 'study', days: [6], hours: [19,20], weight: 0.6}, // Sunday evening study prep
+        // Study sessions - prioritized times
+        {activity: 'study', days: [0,1,2,3,4], hours: [7,8], weight: 0.8}, // Early morning
+        {activity: 'study', days: [0,1,2,3,4], hours: [18,19,20], weight: 0.9}, // Evening
+        {activity: 'study', days: [5,6], hours: [9,10,11,14,15,16], weight: 0.8}, // Weekend blocks
+        {activity: 'study', days: [6], hours: [19,20], weight: 0.6}, // Sunday prep
         
-        // Family time - 10-12 hours (reduced for study focus)
-        {activity: 'family', days: [0,1,2,3,4], hours: [17], weight: 0.7}, // Quick weekday family dinner
-        {activity: 'family', days: [6], hours: [12,13], weight: 0.8}, // Sunday family lunch
-        {activity: 'family', days: [5], hours: [18], weight: 0.5}, // Limited Friday family time
+        // Family time
+        {activity: 'family', days: [0,1,2,3,4], hours: [17], weight: 0.7}, // Weekday dinner
+        {activity: 'family', days: [6], hours: [12,13], weight: 0.8}, // Sunday lunch
+        {activity: 'family', days: [5], hours: [18], weight: 0.5}, // Friday evening
         
-        // Social & Leisure - 12-15 hours (significantly reduced - the sacrifice)
-        {activity: 'social', days: [5], hours: [20,21], weight: 0.7}, // Shorter Friday night
-        {activity: 'social', days: [6], hours: [17,18], weight: 0.6}, // Limited Saturday evening
-        {activity: 'social', days: [1,3], hours: [21], weight: 0.3}, // Minimal weeknight social
-        {activity: 'social', days: [0], hours: [15,16], weight: 0.4}, // Some Sunday afternoon social
+        // Social & Leisure
+        {activity: 'social', days: [5], hours: [20,21], weight: 0.7}, // Friday night
+        {activity: 'social', days: [6], hours: [17,18], weight: 0.6}, // Saturday evening
+        {activity: 'social', days: [1,3], hours: [21], weight: 0.3}, // Weeknight social
+        {activity: 'social', days: [0], hours: [15,16], weight: 0.4}, // Sunday afternoon
         
-        // Other commitments - 6-8 hours (streamlined essentials only)
-        {activity: 'other', days: [6], hours: [8,9], weight: 0.8}, // Saturday morning errands
-        {activity: 'other', days: [2], hours: [19], weight: 0.4}, // Mid-week essentials
-        {activity: 'other', days: [5], hours: [17], weight: 0.5}, // Friday afternoon admin
+        // Other commitments
+        {activity: 'other', days: [6], hours: [8,9], weight: 0.8}, // Saturday errands
+        {activity: 'other', days: [2], hours: [19], weight: 0.4}, // Mid-week tasks
+        {activity: 'other', days: [5], hours: [17], weight: 0.5}, // Friday admin
       ];
       
       suggestions.forEach(suggestion => {
@@ -724,12 +846,13 @@
       
       updateStats();
       
-      // Show a realistic message about trade-offs
       setTimeout(() => {
-        alert('📚 Realistic study schedule applied! Notice: ~22h study, ~11h family, ~13h social (reduced), ~7h other. Effective studying requires reducing social time and streamlining other activities. Success demands sacrifice!');
+        alert('✨ Smart schedule applied! This suggests ~22h study, balanced with family and social time. Adjust as needed for your preferences.');
       }, 300);
     }
-    document.addEventListener('DOMContentLoaded',initWeeklyGrid);
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initWeeklyGrid);
   </script>
 </body>
 </html>
