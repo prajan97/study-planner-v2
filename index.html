@@ -81,7 +81,7 @@
       margin: 0 auto;
       padding: 30px 20px;
       display: grid;
-      grid-template-columns: 420px 1fr;
+      grid-template-columns: 320px 1fr;
       gap: 30px;
       min-height: calc(100vh - 200px);
     }
@@ -387,12 +387,12 @@
     
     .calendar-stats-container {
       display: grid;
-      grid-template-columns: 1fr 280px;
-      gap: 20px;
+      grid-template-columns: 1fr 320px;
+      gap: 25px;
       margin-top: 20px;
     }
     
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       .calendar-stats-container {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -419,13 +419,13 @@
     .stats-grid-right {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 25px;
     }
     
     .chart-container-right {
       width: 100%;
-      height: 180px;
+      height: 220px;
       margin: 0 auto;
     }
     
@@ -708,7 +708,7 @@
             <option value="custom" data-hours="30">Custom hours per week</option>
             <option value="short" data-hours="35">Short: 11:30pm-6:30am (35 hrs/week)</option>
             <option value="light" data-hours="42">Light: 11pm-6am (42 hrs/week)</option>
-            <option value="average" data-hours="49" selected>Average: 10:30pm-6am (49 hrs/week)</option>
+            <option value="average" data-hours="49" selected>Average: 11pm-6am (49 hrs/week)</option>
             <option value="good" data-hours="56">Good: 10pm-6am (56 hrs/week)</option>
             <option value="extended" data-hours="63">Extended: 9:30pm-6am (63 hrs/week)</option>
           </select>
@@ -1130,7 +1130,7 @@
         'custom': {start: 23, end: 6},
         'short': {start: 23.5, end: 6.5},
         'light': {start: 23, end: 6},
-        'average': {start: 22.5, end: 6},
+        'average': {start: 23, end: 6},  // Changed to 7 hours (49 -> 49 hrs/week)
         'good': {start: 22, end: 6},
         'extended': {start: 21.5, end: 6}
       };
@@ -1225,7 +1225,15 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false
+              display: true,
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 11
+                },
+                padding: 10,
+                usePointStyle: true
+              }
             }
           }
         }
@@ -1240,29 +1248,33 @@
         }
       });
       
-      // Smart suggestions for balanced schedule
+      // Target hours: Study: 23, Family: ~12, Social: ~12
+      // More strategic placement for better balance
       const suggestions = [
-        // Study sessions - prioritized times
-        {activity: 'study', days: [0,1,2,3,4], hours: [7,8], weight: 0.8}, // Early morning
-        {activity: 'study', days: [0,1,2,3,4], hours: [18,19,20], weight: 0.9}, // Evening
-        {activity: 'study', days: [5,6], hours: [9,10,11,14,15,16], weight: 0.8}, // Weekend blocks
-        {activity: 'study', days: [6], hours: [19,20], weight: 0.6}, // Sunday prep
+        // Study sessions - 23 hours target (reduced from previous)
+        {activity: 'study', days: [0,1,2,3,4], hours: [7], weight: 0.9}, // Early morning weekdays (5h)
+        {activity: 'study', days: [0,1,2,3,4], hours: [19,20], weight: 0.9}, // Evening weekdays (10h)
+        {activity: 'study', days: [5,6], hours: [9,10,14,15], weight: 0.8}, // Weekend blocks (8h)
         
-        // Family time
-        {activity: 'family', days: [0,1,2,3,4], hours: [17], weight: 0.7}, // Weekday dinner
-        {activity: 'family', days: [6], hours: [12,13], weight: 0.8}, // Sunday lunch
-        {activity: 'family', days: [5], hours: [18], weight: 0.5}, // Friday evening
+        // Family time - 12 hours target (increased significantly)
+        {activity: 'family', days: [0,1,2,3,4], hours: [17,18], weight: 0.8}, // Weekday evenings (10h)
+        {activity: 'family', days: [6], hours: [12,13], weight: 0.9}, // Sunday lunch (2h)
+        {activity: 'family', days: [5], hours: [18], weight: 0.7}, // Friday evening
+        {activity: 'family', days: [6], hours: [17], weight: 0.7}, // Sunday evening
         
-        // Social & Leisure
-        {activity: 'social', days: [5], hours: [20,21], weight: 0.7}, // Friday night
-        {activity: 'social', days: [6], hours: [17,18], weight: 0.6}, // Saturday evening
-        {activity: 'social', days: [1,3], hours: [21], weight: 0.3}, // Weeknight social
-        {activity: 'social', days: [0], hours: [15,16], weight: 0.4}, // Sunday afternoon
+        // Social time - 12 hours target (increased significantly)  
+        {activity: 'social', days: [5], hours: [19,20,21], weight: 0.9}, // Friday night (3h)
+        {activity: 'social', days: [6], hours: [19,20,21], weight: 0.8}, // Saturday night (3h)
+        {activity: 'social', days: [0], hours: [15,16], weight: 0.8}, // Sunday afternoon (2h)
+        {activity: 'social', days: [5], hours: [17], weight: 0.7}, // Friday evening
+        {activity: 'social', days: [6], hours: [16], weight: 0.7}, // Saturday afternoon
+        {activity: 'social', days: [1,3], hours: [21], weight: 0.6}, // Weeknight social (2h)
+        {activity: 'social', days: [2], hours: [21], weight: 0.5}, // Mid-week social
         
-        // Other commitments
-        {activity: 'other', days: [6], hours: [8,9], weight: 0.8}, // Saturday errands
-        {activity: 'other', days: [2], hours: [19], weight: 0.4}, // Mid-week tasks
-        {activity: 'other', days: [5], hours: [17], weight: 0.5}, // Friday admin
+        // Other commitments - reduced to make room for family/social
+        {activity: 'other', days: [6], hours: [8], weight: 0.8}, // Saturday morning errands
+        {activity: 'other', days: [5], hours: [16], weight: 0.6}, // Friday afternoon
+        {activity: 'other', days: [0], hours: [14], weight: 0.5}, // Sunday afternoon
       ];
       
       suggestions.forEach(suggestion => {
@@ -1281,7 +1293,7 @@
       updateStats();
       
       setTimeout(() => {
-        alert('Smart schedule applied! This suggests balanced study time with family and social activities. Adjust as needed for your preferences.');
+        alert('Smart schedule applied! Balanced approach: ~23h study, ~12h family time, ~12h social activities. Adjust as needed for your lifestyle.');
       }, 300);
     }
     
