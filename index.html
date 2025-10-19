@@ -78,11 +78,11 @@
     .header .uni-name { margin-top: 12px; font-size: 12px; font-weight: 600; letter-spacing: 2px; opacity: 0.85; }
     
     .main-container {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 30px 20px;
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: 350px 1fr;
       gap: 30px;
       min-height: calc(100vh - 200px);
     }
@@ -95,48 +95,48 @@
     }
     
     .left-panel {
-      background: white;
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      border: 1px solid #e9ecef;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border-color);
       height: fit-content;
       position: sticky;
-      top: 30px;
+      top: 20px;
     }
     
     .right-panel {
-      background: white;
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      border: 1px solid #e9ecef;
-      min-height: 600px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border-color);
+      min-height: 500px;
     }
     
     .panel-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #212529;
-      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     
     .intro-text {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      border-left: 4px solid #e52d27;
-      color: #495057;
-      line-height: 1.6;
+      background: var(--bg-tertiary);
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 3px solid #e52d27;
+      color: var(--text-secondary);
+      line-height: 1.5;
       font-size: 14px;
     }
     
     .input-group { 
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
     
     label {
