@@ -81,7 +81,7 @@
       margin: 0 auto;
       padding: 30px 20px;
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: 420px 1fr;
       gap: 30px;
       min-height: calc(100vh - 200px);
     }
@@ -168,6 +168,44 @@
       color: #6c757d; 
       margin-top: 6px; 
       line-height: 1.4;
+    }
+    
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 13px;
+      margin-bottom: 0;
+    }
+    
+    .checkbox-item:hover {
+      border-color: #e52d27;
+      background: rgba(229, 45, 39, 0.05);
+    }
+    
+    .checkbox-item input[type="checkbox"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      accent-color: #e52d27;
+    }
+    
+    .checkbox-item input[type="checkbox"]:checked + span {
+      color: #e52d27;
+      font-weight: 600;
     }
     
     .calculate-btn {
@@ -331,12 +369,13 @@
       line-height: 22px;
     }
     
-    .grid-cell:hover:not(.work):not(.sleep) { 
+    .grid-cell:hover:not(.work):not(.sleep):not(.commute) { 
       background: rgba(229, 45, 39, 0.1);
     }
     
     .grid-cell.study { background: #28a745; color: white; }
     .grid-cell.work { background: #e52d27; color: white; }
+    .grid-cell.commute { background: #fd7e14; color: white; }
     .grid-cell.sleep { background: #6c757d; color: white; }
     .grid-cell.family { background: #ff6b6b; color: white; }
     .grid-cell.social { background: #ffc107; color: #212529; font-weight:600; }
@@ -474,7 +513,7 @@
       border: 1px solid var(--border-color);
     }
     
-    .grid-cell:hover:not(.work):not(.sleep) { 
+    .grid-cell:hover:not(.work):not(.sleep):not(.commute) { 
       background: rgba(229, 45, 39, 0.1);
     }
     
@@ -546,12 +585,12 @@
       </div>
       
       <div class="intro-text">
-        Plan your study time around your existing work and sleep schedule for realistic academic goals.
+        Plan your study time around your existing work, commute, and sleep schedule for realistic academic goals.
       </div>
       
       <form id="calculatorForm">
         <div class="input-group">
-          <label>Work & Commute Schedule</label>
+          <label>Work Schedule</label>
           <select id="workSchedule" required>
             <option value="">Select your work schedule</option>
             <option value="custom" data-hours="15">Custom hours per week</option>
@@ -564,7 +603,61 @@
             <option value="long-55" data-hours="55">Long hours: 7am-6pm (55 hrs/week)</option>
             <option value="long-60" data-hours="60">Long hours: 7am-7pm (60 hrs/week)</option>
           </select>
-          <div class="helper-text">Includes commute time, automatically scheduled Mon-Fri</div>
+          <div class="helper-text">Core work hours, automatically scheduled Mon-Fri</div>
+        </div>
+
+        <div class="input-group">
+          <label>Daily Commute Time</label>
+          <select id="commuteSchedule" required>
+            <option value="">Select your commute duration</option>
+            <option value="none" data-hours="0">No commute (WFH/Remote)</option>
+            <option value="short" data-hours="5">Short: 30 min total (5 hrs/week)</option>
+            <option value="moderate" data-hours="7.5">Moderate: 45 min total (7.5 hrs/week)</option>
+            <option value="standard" data-hours="10" selected>Standard: 1 hour total (10 hrs/week)</option>
+            <option value="long" data-hours="12.5">Long: 1.5 hours total (12.5 hrs/week)</option>
+            <option value="extended" data-hours="15">Extended: 2+ hours total (15 hrs/week)</option>
+            <option value="custom" data-hours="8">Custom duration</option>
+          </select>
+          <div class="helper-text">Total daily travel time (to work + from work)</div>
+        </div>
+
+        <div class="input-group">
+          <label>Work Arrangement</label>
+          <select id="workArrangement">
+            <option value="office" selected>Full-time in office</option>
+            <option value="hybrid-2">Hybrid: 2 days WFH, 3 days office</option>
+            <option value="hybrid-3">Hybrid: 3 days WFH, 2 days office</option>
+            <option value="remote">Fully remote</option>
+            <option value="flexible">Flexible arrangement</option>
+          </select>
+          <div class="helper-text">Choose your typical weekly work pattern</div>
+        </div>
+
+        <div class="input-group" id="hybridDaysGroup" style="display: none;">
+          <label>Office Days (for Hybrid)</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" value="monday" class="office-day-checkbox">
+              <span>Monday</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" value="tuesday" class="office-day-checkbox">
+              <span>Tuesday</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" value="wednesday" class="office-day-checkbox" checked>
+              <span>Wednesday</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" value="thursday" class="office-day-checkbox" checked>
+              <span>Thursday</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" value="friday" class="office-day-checkbox">
+              <span>Friday</span>
+            </label>
+          </div>
+          <div class="helper-text">Select which days you'll be in the office</div>
         </div>
 
         <div class="input-group">
@@ -608,13 +701,17 @@
       <div id="calendarContainer" class="calendar-container">
         <div class="calendar-header">
           <p style="color:#495057; margin-bottom:15px; font-weight:500;">
-            <strong>Work & Sleep</strong> are pre-filled. Schedule your remaining activities below.
+            <strong>Work, Commute & Sleep</strong> are pre-filled based on your selections. Schedule your remaining activities below.
           </p>
           
           <div class="legend">
             <div class="legend-item">
               <div class="legend-color" style="background:#e52d27;"></div>
               <span>Work (Auto)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#fd7e14;"></div>
+              <span>Commute (Auto)</span>
             </div>
             <div class="legend-item">
               <div class="legend-color" style="background:#6c757d;"></div>
@@ -669,7 +766,7 @@
       <div id="calendarPlaceholder" style="text-align: center; padding: 80px 20px; color: #6c757d;">
         <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
         <h3 style="margin-bottom: 12px; color: #495057;">Your Schedule Will Appear Here</h3>
-        <p>Select your work and sleep schedules on the left to get started.</p>
+        <p>Select your work, commute, and sleep schedules on the left to get started.</p>
       </div>
     </div>
   </div>
@@ -680,17 +777,20 @@
       e.preventDefault();
       
       const workSchedule = document.getElementById('workSchedule');
+      const commuteSchedule = document.getElementById('commuteSchedule');
       const sleepSchedule = document.getElementById('sleepSchedule');
+      const workArrangement = document.getElementById('workArrangement');
       
-      if (!workSchedule.value || !sleepSchedule.value) {
-        alert('Please select both work and sleep schedules');
+      if (!workSchedule.value || !commuteSchedule.value || !sleepSchedule.value) {
+        alert('Please select work schedule, commute time, and sleep schedule');
         return;
       }
       
       const work = parseInt(workSchedule.selectedOptions[0].dataset.hours);
+      const commute = parseInt(commuteSchedule.selectedOptions[0].dataset.hours);
       const sleep = parseInt(sleepSchedule.selectedOptions[0].dataset.hours);
       
-      const totalCommitted = work + sleep;
+      const totalCommitted = work + commute + sleep;
       let available = 168 - totalCommitted;
       if (available < 0) available = 0;
       
@@ -699,13 +799,14 @@
       const breakdown = document.getElementById('scheduleBreakdown');
       breakdown.innerHTML = `
         <div>Work: <strong>${work} hours/week</strong></div>
+        <div>Commute: <strong>${commute} hours/week</strong></div>
         <div>Sleep: <strong>${sleep} hours/week</strong></div>
         <div style="color: #28a745; font-weight: 600;">Available: <strong>${available} hours/week</strong></div>
       `;
       scheduleInfo.classList.add('show');
       
       // Initialize and populate calendar
-      populateSchedule(workSchedule.value, sleepSchedule.value);
+      populateSchedule(workSchedule.value, commuteSchedule.value, sleepSchedule.value, workArrangement.value);
       
       // Show calendar
       document.getElementById('calendarPlaceholder').style.display = 'none';
@@ -720,6 +821,35 @@
     let scheduleChart;
     let isDragging = false;
     let currentActivity = 'study';
+
+    // Show/hide hybrid days selection
+    document.addEventListener('DOMContentLoaded', function() {
+      const workArrangement = document.getElementById('workArrangement');
+      const hybridDaysGroup = document.getElementById('hybridDaysGroup');
+      
+      workArrangement.addEventListener('change', function() {
+        if (this.value.startsWith('hybrid')) {
+          hybridDaysGroup.style.display = 'block';
+          
+          // Auto-select appropriate number of days
+          const checkboxes = document.querySelectorAll('.office-day-checkbox');
+          checkboxes.forEach(cb => cb.checked = false);
+          
+          if (this.value === 'hybrid-2') {
+            // Default to Wed, Thu for 2-day office
+            document.querySelector('input[value="wednesday"]').checked = true;
+            document.querySelector('input[value="thursday"]').checked = true;
+          } else if (this.value === 'hybrid-3') {
+            // Default to Mon, Wed, Fri for 3-day office
+            document.querySelector('input[value="monday"]').checked = true;
+            document.querySelector('input[value="wednesday"]').checked = true;
+            document.querySelector('input[value="friday"]').checked = true;
+          }
+        } else {
+          hybridDaysGroup.style.display = 'none';
+        }
+      });
+    });
 
     // Initialize grid
     function initWeeklyGrid() {
@@ -759,12 +889,14 @@
     function handleCellClick(e) {
       const cell = e.target;
       if(e.button === 2) {
-        cell.className = 'grid-cell';
-        updateStats();
+        if(!cell.classList.contains('work') && !cell.classList.contains('sleep') && !cell.classList.contains('commute')) {
+          cell.className = 'grid-cell';
+          updateStats();
+        }
         return;
       }
       
-      if(cell.classList.contains('work') || cell.classList.contains('sleep')) {
+      if(cell.classList.contains('work') || cell.classList.contains('sleep') || cell.classList.contains('commute')) {
         return;
       }
       
@@ -780,7 +912,7 @@
       const cell = e.target;
       if(!cell.classList.contains('grid-cell')) return;
       
-      if(cell.classList.contains('work') || cell.classList.contains('sleep')) {
+      if(cell.classList.contains('work') || cell.classList.contains('sleep') || cell.classList.contains('commute')) {
         return;
       }
       
@@ -810,7 +942,7 @@
       if(clearPersonal) {
         clearPersonal.addEventListener('click', () => {
           document.querySelectorAll('.grid-cell').forEach(c => {
-            if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
+            if(!c.classList.contains('work') && !c.classList.contains('sleep') && !c.classList.contains('commute')) {
               c.className = 'grid-cell';
             }
           });
@@ -826,16 +958,33 @@
     }
     
     // Populate schedule
-    function populateSchedule(workType, sleepType) {
+    function populateSchedule(workType, commuteType, sleepType, arrangementType) {
       document.querySelectorAll('.grid-cell').forEach(c => c.className = 'grid-cell');
       
-      // Schedule work Monday-Friday
+      // Get office days for hybrid workers
+      const officeDays = getOfficeDays(arrangementType);
+      
+      // Schedule work
       const workHours = getWorkHours(workType);
-      for(let day = 0; day < 5; day++) {
+      officeDays.forEach(day => {
         for(let hour = workHours.start; hour < workHours.end; hour++) {
           const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
           if(cell) cell.classList.add('work');
         }
+      });
+      
+      // Schedule commute (only on office days and if commute exists)
+      if (commuteType !== 'none') {
+        const commuteHours = getCommuteHours(commuteType, workHours);
+        officeDays.forEach(day => {
+          // Morning commute
+          const morningCell = document.querySelector(`[data-day="${day}"][data-hour="${commuteHours.morning}"]`);
+          if(morningCell) morningCell.classList.add('commute');
+          
+          // Evening commute
+          const eveningCell = document.querySelector(`[data-day="${day}"][data-hour="${commuteHours.evening}"]`);
+          if(eveningCell) eveningCell.classList.add('commute');
+        });
       }
       
       // Schedule sleep every night
@@ -867,6 +1016,22 @@
       updateStats();
     }
     
+    function getOfficeDays(arrangementType) {
+      if (arrangementType === 'remote') {
+        return []; // No office days
+      } else if (arrangementType.startsWith('hybrid')) {
+        // Get selected days from checkboxes
+        const checkedBoxes = document.querySelectorAll('.office-day-checkbox:checked');
+        const dayMap = {
+          'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3, 'friday': 4
+        };
+        return Array.from(checkedBoxes).map(cb => dayMap[cb.value]);
+      } else {
+        // Full office or flexible - default to Mon-Fri
+        return [0, 1, 2, 3, 4];
+      }
+    }
+    
     function getWorkHours(workType) {
       const schedules = {
         'custom': {start: 9, end: 12},
@@ -880,6 +1045,27 @@
         'long-60': {start: 7, end: 19}
       };
       return schedules[workType] || schedules.standard;
+    }
+    
+    function getCommuteHours(commuteType, workHours) {
+      const commuteMinutes = {
+        'none': 0,
+        'short': 15,      // 30 min total = 15 min each way
+        'moderate': 22.5, // 45 min total = 22.5 min each way
+        'standard': 30,   // 1 hour total = 30 min each way
+        'long': 45,       // 1.5 hours total = 45 min each way
+        'extended': 60,   // 2+ hours total = 60+ min each way
+        'custom': 24      // Default for custom
+      };
+      
+      const oneWayMinutes = commuteMinutes[commuteType] || 30;
+      const commuteBefore = Math.max(0, workHours.start - 1); // 1 hour before work
+      const commuteAfter = Math.min(23, workHours.end); // Right after work
+      
+      return {
+        morning: commuteBefore,
+        evening: commuteAfter
+      };
     }
     
     function getSleepHours(sleepType) {
@@ -896,7 +1082,7 @@
 
     function updateStats() {
       const cells = document.querySelectorAll('.grid-cell');
-      const countBy = {study:0, work:0, sleep:0, family:0, social:0, other:0};
+      const countBy = {study:0, work:0, sleep:0, family:0, social:0, other:0, commute:0};
       
       cells.forEach(c => {
         if(c.classList.length > 1) {
@@ -913,13 +1099,17 @@
       const statsSection = document.getElementById('statsSection');
       const statsGrid = document.getElementById('statsGrid');
       
-      const total = counts.work + counts.sleep + counts.study + counts.family + counts.social + counts.other;
+      const total = counts.work + counts.sleep + counts.study + counts.family + counts.social + counts.other + counts.commute;
       const available = 168 - total;
       
       statsGrid.innerHTML = `
         <div class="stat-item">
           <div class="stat-value" style="color:#e52d27;">${counts.work}h</div>
           <div class="stat-label">Work</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#fd7e14;">${counts.commute}h</div>
+          <div class="stat-label">Commute</div>
         </div>
         <div class="stat-item">
           <div class="stat-value" style="color:#6c757d;">${counts.sleep}h</div>
@@ -947,7 +1137,7 @@
         </div>` : ''}
       `;
       
-      if(total > counts.work + counts.sleep) {
+      if(total > counts.work + counts.sleep + counts.commute) {
         statsSection.classList.add('show');
       }
     }
@@ -959,9 +1149,9 @@
       const ctx = canvas.getContext('2d');
       if(scheduleChart) scheduleChart.destroy();
       
-      const data = [counts.work, counts.sleep, counts.study, counts.family, counts.social, counts.other];
-      const labels = ['Work', 'Sleep', 'Study', 'Family', 'Social', 'Other'];
-      const colors = ['#e52d27', '#6c757d', '#28a745', '#ff6b6b', '#ffc107', '#96ceb4'];
+      const data = [counts.work, counts.commute, counts.sleep, counts.study, counts.family, counts.social, counts.other];
+      const labels = ['Work', 'Commute', 'Sleep', 'Study', 'Family', 'Social', 'Other'];
+      const colors = ['#e52d27', '#fd7e14', '#6c757d', '#28a745', '#ff6b6b', '#ffc107', '#96ceb4'];
       
       scheduleChart = new Chart(ctx, {
         type: 'doughnut',
@@ -988,7 +1178,7 @@
     function smartSuggestSchedule() {
       // Clear personal commitments first
       document.querySelectorAll('.grid-cell').forEach(c => {
-        if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
+        if(!c.classList.contains('work') && !c.classList.contains('sleep') && !c.classList.contains('commute')) {
           c.className = 'grid-cell';
         }
       });
@@ -1023,7 +1213,7 @@
           suggestion.hours.forEach(hour => {
             if(Math.random() < suggestion.weight) {
               const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
-              if(cell && !cell.classList.contains('work') && !cell.classList.contains('sleep') && cell.className === 'grid-cell') {
+              if(cell && !cell.classList.contains('work') && !cell.classList.contains('sleep') && !cell.classList.contains('commute') && cell.className === 'grid-cell') {
                 cell.classList.add(suggestion.activity);
               }
             }
@@ -1034,7 +1224,7 @@
       updateStats();
       
       setTimeout(() => {
-        alert('Smart schedule applied! This suggests ~22h study, balanced with family and social time. Adjust as needed for your preferences.');
+        alert('Smart schedule applied! This suggests balanced study time with family and social activities. Adjust as needed for your preferences.');
       }, 300);
     }
     
@@ -1081,11 +1271,12 @@
               .grid-cell { border: 1px solid #ddd; text-align: center; font-size: 10px; line-height: 25px; }
               .study { background: #28a745; color: white; }
               .work { background: #e52d27; color: white; }
+              .commute { background: #fd7e14; color: white; }
               .sleep { background: #6c757d; color: white; }
               .family { background: #ff6b6b; color: white; }
               .social { background: #ffc107; color: #212529; }
               .other { background: #96ceb4; color: white; }
-              .stats { margin-top: 20px; display: flex; gap: 20px; justify-content: center; }
+              .stats { margin-top: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
               .stat-item { text-align: center; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
               @media print { body { margin: 0; } }
             </style>
@@ -1146,6 +1337,7 @@
           const classes = cell ? cell.className : 'grid-cell';
           const activity = classes.includes('study') ? 'Study' :
                           classes.includes('work') ? 'Work' :
+                          classes.includes('commute') ? 'Commute' :
                           classes.includes('sleep') ? 'Sleep' :
                           classes.includes('family') ? 'Family' :
                           classes.includes('social') ? 'Social' :
@@ -1160,7 +1352,7 @@
     
     function generatePrintableStats() {
       const cells = document.querySelectorAll('.grid-cell');
-      const countBy = {study:0, work:0, sleep:0, family:0, social:0, other:0};
+      const countBy = {study:0, work:0, commute:0, sleep:0, family:0, social:0, other:0};
       
       cells.forEach(c => {
         if(c.classList.length > 1) {
@@ -1172,6 +1364,7 @@
       return `
         <div class="stats">
           <div class="stat-item"><strong>${countBy.work}h</strong><br>Work</div>
+          <div class="stat-item"><strong>${countBy.commute}h</strong><br>Commute</div>
           <div class="stat-item"><strong>${countBy.sleep}h</strong><br>Sleep</div>
           <div class="stat-item"><strong>${countBy.study}h</strong><br>Study</div>
           <div class="stat-item"><strong>${countBy.family}h</strong><br>Family</div>
