@@ -346,7 +346,7 @@
 </head>
 <body>
   <div class="header">
-    <h1>📚 Study Planner</h1>
+    <h1>Study Planner</h1>
     <div class="subtitle">Realistic recommendations for your schedule</div>
     <div class="uni-name">KING'S COLLEGE LONDON</div>
   </div>
@@ -355,16 +355,16 @@
     <!-- Left Panel: Form Controls -->
     <div class="left-panel">
       <div class="panel-title">
-        ⚙️ Schedule Settings
+        Your Commitments
       </div>
       
       <div class="intro-text">
-        <strong>Get realistic study recommendations</strong> by factoring in your actual work and sleep commitments.
+        Plan your study time around your existing work and sleep schedule for realistic academic goals.
       </div>
       
       <form id="calculatorForm">
         <div class="input-group">
-          <label>🏢 Work & Commute Schedule</label>
+          <label>Work & Commute Schedule</label>
           <select id="workSchedule" required>
             <option value="">Select your work schedule</option>
             <option value="custom" data-hours="15">Custom hours per week</option>
@@ -381,7 +381,7 @@
         </div>
 
         <div class="input-group">
-          <label>😴 Sleep Schedule</label>
+          <label>Sleep Schedule</label>
           <select id="sleepSchedule" required>
             <option value="">Select your sleep pattern</option>
             <option value="custom" data-hours="30">Custom hours per week</option>
@@ -394,17 +394,17 @@
           <div class="helper-text">Automatically scheduled every night</div>
         </div>
 
-        <button type="submit" class="calculate-btn">📊 Generate Study Plan</button>
+        <button type="submit" class="calculate-btn">Generate Study Plan</button>
       </form>
 
       <div id="scheduleInfo" class="schedule-info">
-        <div style="font-weight: 600; margin-bottom: 8px;">📋 Schedule Overview</div>
+        <div style="font-weight: 600; margin-bottom: 8px;">Schedule Overview</div>
         <div id="scheduleBreakdown"></div>
       </div>
 
       <!-- Stats Section -->
       <div id="statsSection" class="stats-section">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center;">📊 Weekly Breakdown</div>
+        <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center;">Weekly Breakdown</div>
         <div id="statsGrid" class="stats-grid"></div>
         <div class="chart-container">
           <canvas id="scheduleChart" width="300" height="200"></canvas>
@@ -415,13 +415,13 @@
     <!-- Right Panel: Calendar -->
     <div class="right-panel">
       <div class="panel-title">
-        🗓️ Interactive Schedule Builder
+        Interactive Schedule Builder
       </div>
       
       <div id="calendarContainer" class="calendar-container">
         <div class="calendar-header">
           <p style="color:#495057; margin-bottom:15px; font-weight:500;">
-            ✨ <strong>Work & Sleep</strong> are pre-filled. Schedule your remaining activities below.
+            <strong>Work & Sleep</strong> are pre-filled. Schedule your remaining activities below.
           </p>
           
           <div class="legend">
@@ -454,23 +454,23 @@
         
         <div class="calendar-controls">
           <div class="activity-select-group">
-            <label>🎨 Paint with:</label>
+            <label>Paint with:</label>
             <select id="activitySelect" style="padding:8px 12px; border-radius:8px; border:2px solid #dee2e6; font-size:14px; background:white;">
-              <option value="study" selected>📚 Study Sessions</option>
-              <option value="family">👨‍👩‍👧‍👦 Family Time</option>
-              <option value="social">🎉 Social & Fun</option>
-              <option value="other">📋 Other Commitments</option>
+              <option value="study" selected>Study Sessions</option>
+              <option value="family">Family Time</option>
+              <option value="social">Social & Fun</option>
+              <option value="other">Other Commitments</option>
             </select>
           </div>
           
           <div class="control-buttons">
-            <button id="clearPersonal" class="btn btn-secondary">🎨 Clear Personal</button>
-            <button id="smartSuggest" class="btn btn-primary">✨ Smart Fill</button>
+            <button id="clearPersonal" class="btn btn-secondary">Clear Personal</button>
+            <button id="smartSuggest" class="btn btn-primary">Smart Fill</button>
           </div>
         </div>
         
         <div class="usage-tip">
-          💡 <strong>Tip:</strong> Click and drag to fill time slots. Right-click to remove activities.
+          <strong>Tip:</strong> Click and drag to fill time slots. Right-click to remove activities.
         </div>
         
         <div class="calendar-grid">
@@ -511,9 +511,9 @@
       const scheduleInfo = document.getElementById('scheduleInfo');
       const breakdown = document.getElementById('scheduleBreakdown');
       breakdown.innerHTML = `
-        <div>🏢 Work: <strong>${work} hours/week</strong></div>
-        <div>😴 Sleep: <strong>${sleep} hours/week</strong></div>
-        <div style="color: #28a745; font-weight: 600;">⏰ Available: <strong>${available} hours/week</strong></div>
+        <div>Work: <strong>${work} hours/week</strong></div>
+        <div>Sleep: <strong>${sleep} hours/week</strong></div>
+        <div style="color: #28a745; font-weight: 600;">Available: <strong>${available} hours/week</strong></div>
       `;
       scheduleInfo.classList.add('show');
       
@@ -847,7 +847,7 @@
       updateStats();
       
       setTimeout(() => {
-        alert('✨ Smart schedule applied! This suggests ~22h study, balanced with family and social time. Adjust as needed for your preferences.');
+        alert('Smart schedule applied! This suggests ~22h study, balanced with family and social time. Adjust as needed for your preferences.');
       }, 300);
     }
     
