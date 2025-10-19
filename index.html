@@ -8,7 +8,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* === Theme Variables === */
+    /* ===== THEME COLORS ===== */
     [data-theme="dark"] {
       --bg-primary: #1a1a1a;
       --bg-secondary: #2d2d2d;
@@ -20,6 +20,7 @@
       --card-bg: #2d2d2d;
       --input-bg: #3a3a3a;
     }
+
     [data-theme="light"] {
       --bg-primary: #f8f9fa;
       --bg-secondary: #ffffff;
@@ -36,13 +37,13 @@
       font-family: 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
+      transition: background 0.3s, color 0.3s;
       min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
     }
 
-    /* === Header === */
+    /* ===== HEADER ===== */
     .header {
-      background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+      background: linear-gradient(135deg, #e52d27, #b31217);
       color: white;
       padding: 40px 0;
       box-shadow: 0 4px 20px rgba(229, 45, 39, 0.3);
@@ -50,25 +51,22 @@
     .header-content {
       max-width: 1200px;
       margin: auto;
-      padding: 0 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 20px;
     }
-    .header h1 { font-size: 32px; font-weight: 700; }
-    .subtitle { font-size: 16px; opacity: 0.95; }
-    .uni-name { margin-top: 8px; font-size: 12px; letter-spacing: 1.5px; }
+    .header h1 { font-size: 32px; margin-bottom: 5px; }
+    .subtitle { font-size: 16px; opacity: 0.9; }
+    .uni-name { font-size: 12px; letter-spacing: 2px; opacity: 0.85; }
 
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .header-actions { display: flex; gap: 10px; }
     .action-btn, .theme-toggle {
-      background: rgba(255,255,255,0.2);
       border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 40px;
+      background: rgba(255,255,255,0.2);
       color: white;
       padding: 10px 16px;
+      border-radius: 40px;
       cursor: pointer;
       transition: 0.3s;
     }
@@ -77,13 +75,13 @@
       transform: translateY(-2px);
     }
 
-    /* === Layout === */
+    /* ===== LAYOUT ===== */
     .main-container {
-      max-width: 1200px;
-      margin: auto;
       display: grid;
       grid-template-columns: 350px 1fr;
       gap: 30px;
+      max-width: 1200px;
+      margin: auto;
       padding: 30px 20px;
     }
     @media (max-width: 1000px) {
@@ -98,31 +96,50 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
 
-    /* === Inputs === */
+    .panel-title {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* ===== FORM ===== */
     label { display: block; margin-bottom: 6px; font-weight: 600; }
     select {
       width: 100%;
       padding: 10px;
-      border: 2px solid var(--border-color);
       border-radius: 8px;
+      border: 2px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-primary);
       font-size: 14px;
+      margin-bottom: 10px;
     }
+
     .calculate-btn {
       background: linear-gradient(135deg, #e52d27, #b31217);
-      color: white;
       border: none;
+      color: white;
+      width: 100%;
       padding: 12px;
       border-radius: 8px;
-      width: 100%;
       font-weight: 600;
-      margin-top: 10px;
       cursor: pointer;
+      transition: 0.3s;
     }
     .calculate-btn:hover { transform: translateY(-2px); }
 
-    /* === Schedule === */
+    .schedule-info {
+      background: var(--bg-tertiary);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid #17a2b8;
+      display: none;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .schedule-info.show { display: block; }
+
+    /* ===== CALENDAR ===== */
     .calendar-container { display: none; }
     .calendar-container.show { display: block; }
 
@@ -131,8 +148,9 @@
       grid-template-columns: 60px repeat(7, 1fr);
       grid-auto-rows: 22px;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 8px;
       overflow: hidden;
+      user-select: none;
     }
     .grid-header {
       background: var(--bg-tertiary);
@@ -150,16 +168,16 @@
       transition: 0.15s;
     }
 
-    /* === Activity Colors === */
+    /* ===== COLORS ===== */
     .grid-cell.work { background: #e52d27; color: white; }
     .grid-cell.sleep { background: #6c757d; color: white; }
     .grid-cell.study { background: #28a745; color: white; }
     .grid-cell.commute { background: #fd7e14; color: white; }
     .grid-cell.family { background: #6f42c1; color: white; }
-    .grid-cell.social { background: #ffc107; color: #212529; font-weight: 600; }
+    .grid-cell.social { background: #ffc107; color: #212529; }
     .grid-cell.other { background: #96ceb4; color: white; }
 
-    /* === Stats === */
+    /* ===== STATS ===== */
     .stats-section { margin-top: 20px; display: none; }
     .stats-section.show { display: block; }
     .stats-grid {
@@ -175,68 +193,61 @@
       padding: 10px;
     }
     .stat-value { font-size: 18px; font-weight: 700; }
-    .chart-container { width: 100%; max-width: 300px; margin: 10px auto; }
+    .chart-container { max-width: 300px; margin: 15px auto; height: 200px; }
 
   </style>
 </head>
 <body data-theme="light">
 
-  <!-- ===== HEADER ===== -->
   <div class="header">
     <div class="header-content">
       <div>
         <h1>Study Planner</h1>
-        <div class="subtitle">Realistic schedule generator</div>
+        <div class="subtitle">Realistic recommendations for your schedule</div>
         <div class="uni-name">KING'S COLLEGE LONDON</div>
       </div>
       <div class="header-actions">
-        <button class="action-btn" id="printBtn">Print</button>
-        <button class="action-btn" id="downloadBtn">Download</button>
-        <button class="theme-toggle" id="themeToggle">◐</button>
+        <button id="printBtn" class="action-btn">Print</button>
+        <button id="downloadBtn" class="action-btn">Download</button>
+        <button id="themeToggle" class="theme-toggle">◐</button>
       </div>
     </div>
   </div>
 
-  <!-- ===== MAIN CONTENT ===== -->
   <div class="main-container">
+    <!-- LEFT PANEL -->
     <div class="left-panel">
-      <h3>Your Commitments</h3>
-
+      <div class="panel-title">Your Commitments</div>
       <form id="calculatorForm">
         <label>Work Schedule</label>
-        <select id="workSchedule" required>
-          <option value="">Select...</option>
-          <option value="none" data-hours="0">No work</option>
-          <option value="part-time-16" data-hours="16">Part-time (16h)</option>
-          <option value="standard" data-hours="37.5" selected>Standard (37.5h)</option>
-          <option value="extended-45" data-hours="45">Long (45h)</option>
+        <select id="workSchedule">
+          <option value="standard" data-hours="37.5" selected>Standard (9am–5pm)</option>
+          <option value="part-time-16" data-hours="16">Part-time (9am–1pm)</option>
+          <option value="extended-45" data-hours="45">Long (7am–5pm)</option>
         </select>
 
         <label>Work Pattern</label>
         <select id="workPattern">
-          <option value="office-5" selected>Office 5 days/week</option>
+          <option value="office-5" selected>Office 5 days</option>
           <option value="remote">Remote</option>
         </select>
 
         <label>Commute</label>
         <select id="commuteSchedule">
           <option value="none" data-hours="0">None</option>
-          <option value="short" data-hours="5">Short (1h/day)</option>
           <option value="moderate" data-hours="7.5" selected>Moderate (1.5h/day)</option>
         </select>
 
         <label>Sleep Schedule</label>
-        <select id="sleepSchedule" required>
-          <option value="">Select...</option>
-          <option value="average" data-hours="49" selected>Average (10:30–6:00)</option>
-          <option value="good" data-hours="56">Good (10:00–6:00)</option>
+        <select id="sleepSchedule">
+          <option value="average" data-hours="49" selected>Average (10:30pm–6am)</option>
+          <option value="good" data-hours="56">Good (10pm–6am)</option>
         </select>
 
-        <button class="calculate-btn" type="submit">Generate Study Plan</button>
+        <button type="submit" class="calculate-btn">Generate Study Plan</button>
       </form>
 
-      <div id="scheduleInfo" style="display:none; margin-top:15px;">
-        <h4>Schedule Overview</h4>
+      <div id="scheduleInfo" class="schedule-info">
         <div id="scheduleBreakdown"></div>
       </div>
 
@@ -247,10 +258,11 @@
       </div>
     </div>
 
+    <!-- RIGHT PANEL -->
     <div class="right-panel">
-      <h3>Interactive Schedule</h3>
+      <div class="panel-title">Interactive Schedule</div>
       <div id="calendarContainer" class="calendar-container">
-        <div style="margin-bottom:10px;">
+        <div>
           <label>Paint with:</label>
           <select id="activitySelect">
             <option value="study" selected>Study</option>
@@ -262,81 +274,70 @@
           <button id="clearPersonal" class="action-btn" style="margin-left:10px;">Clear</button>
           <button id="smartSuggest" class="action-btn">Smart Fill</button>
         </div>
-
         <div class="calendar-grid" id="weeklyGrid"></div>
       </div>
 
-      <div id="calendarPlaceholder" style="text-align:center; padding:60px; color:var(--text-muted);">
-        <h3>📅 Your schedule will appear here</h3>
-        <p>Select your work and sleep schedule on the left to begin.</p>
+      <div id="calendarPlaceholder" style="text-align:center; padding:80px; color:var(--text-muted);">
+        <h3>📅 Your Schedule Will Appear Here</h3>
+        <p>Select your work and sleep schedule to begin.</p>
       </div>
     </div>
   </div>
 
   <!-- ===== SCRIPT ===== -->
   <script>
+    let scheduleChart;
     let isDragging = false;
     let currentActivity = 'study';
-    let scheduleChart;
 
-    // === Handle Form Submit ===
+    // ==== FORM SUBMISSION ====
     document.getElementById('calculatorForm').addEventListener('submit', e => {
       e.preventDefault();
       const work = parseFloat(document.getElementById('workSchedule').selectedOptions[0].dataset.hours);
       const commute = parseFloat(document.getElementById('commuteSchedule').selectedOptions[0].dataset.hours);
       const sleep = parseFloat(document.getElementById('sleepSchedule').selectedOptions[0].dataset.hours);
-
       const total = work + commute + sleep;
-      const available = Math.max(0, 168 - total);
+      const available = 168 - total;
 
-      const info = document.getElementById('scheduleInfo');
-      const breakdown = document.getElementById('scheduleBreakdown');
-      breakdown.innerHTML = `
+      document.getElementById('scheduleBreakdown').innerHTML = `
         Work: <strong>${work}h</strong><br>
         Commute: <strong>${commute}h</strong><br>
         Sleep: <strong>${sleep}h</strong><br>
         <span style="color:#28a745;">Available: <strong>${available}h/week</strong></span>
       `;
-      info.style.display = 'block';
-
+      document.getElementById('scheduleInfo').classList.add('show');
       populateSchedule(
         document.getElementById('workSchedule').value,
         document.getElementById('workPattern').value,
         document.getElementById('sleepSchedule').value,
         document.getElementById('commuteSchedule').value
       );
-
       document.getElementById('calendarPlaceholder').style.display = 'none';
       document.getElementById('calendarContainer').classList.add('show');
       addPlannerEventListeners();
     });
 
-    // === Create Grid ===
+    // ==== BUILD GRID ====
     function initWeeklyGrid() {
       const grid = document.getElementById('weeklyGrid');
       grid.innerHTML = '';
       const days = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-      // Header
       days.forEach(d => {
-        const div = document.createElement('div');
-        div.className = 'grid-header';
-        div.textContent = d;
-        grid.appendChild(div);
+        const h = document.createElement('div');
+        h.className = 'grid-header';
+        h.textContent = d;
+        grid.appendChild(h);
       });
-
-      // 24 hours
-      for (let h = 0; h < 24; h++) {
+      for (let hour = 0; hour < 24; hour++) {
         const label = document.createElement('div');
         label.className = 'grid-header';
-        label.textContent = `${h}:00`;
+        label.textContent = `${hour}:00`;
         grid.appendChild(label);
-
-        for (let d = 0; d < 7; d++) {
+        for (let day = 0; day < 7; day++) {
           const cell = document.createElement('div');
           cell.className = 'grid-cell';
-          cell.dataset.hour = h;
-          cell.dataset.day = d;
+          cell.dataset.day = day;
+          cell.dataset.hour = hour;
           cell.addEventListener('mousedown', handleCellClick);
           cell.addEventListener('mouseover', handleCellDrag);
           grid.appendChild(cell);
@@ -344,44 +345,39 @@
       }
     }
 
-    // === Auto Fill Schedule ===
+    // ==== AUTO POPULATE ====
     function populateSchedule(workType, workPattern, sleepType, commuteType) {
       initWeeklyGrid();
-
       const cells = document.querySelectorAll('.grid-cell');
-      // Sleep (23–6)
+
+      // sleep
       cells.forEach(c => {
         const h = +c.dataset.hour;
         if (h >= 23 || h < 6) c.classList.add('sleep');
       });
 
-      // Work hours Mon–Fri
-      const workTimes = {
-        'standard': { start: 9, end: 17 },
-        'part-time-16': { start: 9, end: 13 },
-        'extended-45': { start: 7, end: 17 }
-      };
-      const wh = workTimes[workType] || workTimes['standard'];
+      // work
+      const workHours = { 'standard': { start: 9, end: 17 }, 'part-time-16': { start: 9, end: 13 }, 'extended-45': { start: 7, end: 17 } };
+      const wh = workHours[workType] || workHours['standard'];
       cells.forEach(c => {
         const h = +c.dataset.hour, d = +c.dataset.day;
         if (d < 5 && h >= wh.start && h < wh.end) c.classList.add('work');
       });
 
-      // Commute before/after
-      const commuteMap = { short: 1, moderate: 1.5 };
-      const commuteTime = commuteMap[commuteType] || 0;
+      // commute
+      const commuteTimes = { moderate: 1.5 };
+      const commute = commuteTimes[commuteType] || 0;
       cells.forEach(c => {
         const h = +c.dataset.hour, d = +c.dataset.day;
-        if (d < 5 && commuteTime > 0) {
-          if (h >= wh.start - commuteTime && h < wh.start) c.classList.add('commute');
-          if (h >= wh.end && h < wh.end + commuteTime) c.classList.add('commute');
+        if (d < 5 && commute > 0) {
+          if (h >= wh.start - commute && h < wh.start) c.classList.add('commute');
+          if (h >= wh.end && h < wh.end + commute) c.classList.add('commute');
         }
       });
-
       updateStats();
     }
 
-    // === Mouse Handling ===
+    // ==== CELL INTERACTION ====
     document.addEventListener('mousedown', () => (isDragging = true));
     document.addEventListener('mouseup', () => (isDragging = false));
     document.addEventListener('contextmenu', e => {
@@ -389,37 +385,31 @@
     });
 
     function handleCellClick(e) {
-      const cell = e.target;
-      if (e.button === 2) {
-        cell.className = 'grid-cell';
-        updateStats();
-        return;
-      }
-      if (cell.classList.contains('work') || cell.classList.contains('sleep')) return;
-      cell.className = 'grid-cell ' + currentActivity;
+      const c = e.target;
+      if (e.button === 2) { c.className = 'grid-cell'; updateStats(); return; }
+      if (c.classList.contains('work') || c.classList.contains('sleep')) return;
+      c.className = 'grid-cell ' + currentActivity;
       updateStats();
     }
 
     function handleCellDrag(e) {
       if (!isDragging) return;
-      const cell = e.target;
-      if (!cell.classList.contains('grid-cell')) return;
-      if (cell.classList.contains('work') || cell.classList.contains('sleep')) return;
-      cell.className = 'grid-cell ' + currentActivity;
+      const c = e.target;
+      if (!c.classList.contains('grid-cell')) return;
+      if (c.classList.contains('work') || c.classList.contains('sleep')) return;
+      c.className = 'grid-cell ' + currentActivity;
       updateStats();
     }
 
-    // === Planner Controls ===
+    // ==== PLANNER CONTROLS ====
     function addPlannerEventListeners() {
       document.getElementById('activitySelect').addEventListener('change', e => currentActivity = e.target.value);
-
       document.getElementById('clearPersonal').addEventListener('click', () => {
         document.querySelectorAll('.grid-cell').forEach(c => {
           if (!c.classList.contains('work') && !c.classList.contains('sleep')) c.className = 'grid-cell';
         });
         updateStats();
       });
-
       document.getElementById('smartSuggest').addEventListener('click', () => {
         document.querySelectorAll('.grid-cell').forEach(c => {
           const h = +c.dataset.hour, d = +c.dataset.day;
@@ -431,39 +421,27 @@
       });
     }
 
-    // === Stats ===
+    // ==== STATS ====
     function updateStats() {
       const cells = document.querySelectorAll('.grid-cell');
       const stats = { work: 0, sleep: 0, study: 0, commute: 0, family: 0, social: 0, other: 0 };
-      cells.forEach(c => {
-        for (let key in stats) if (c.classList.contains(key)) stats[key]++;
-      });
-
-      const statsGrid = document.getElementById('statsGrid');
-      statsGrid.innerHTML = Object.entries(stats)
-        .map(([k, v]) => `<div class="stat-item"><div class="stat-value">${v}</div><div class="stat-label">${k}</div></div>`)
-        .join('');
+      cells.forEach(c => { for (let k in stats) if (c.classList.contains(k)) stats[k]++; });
+      document.getElementById('statsGrid').innerHTML = Object.entries(stats)
+        .map(([k, v]) => `<div class="stat-item"><div class="stat-value">${v}</div><div class="stat-label">${k}</div></div>`).join('');
       document.getElementById('statsSection').classList.add('show');
-
       const ctx = document.getElementById('scheduleChart').getContext('2d');
       if (scheduleChart) scheduleChart.destroy();
       scheduleChart = new Chart(ctx, {
         type: 'doughnut',
-        data: {
-          labels: Object.keys(stats),
-          datasets: [{
-            data: Object.values(stats),
-            backgroundColor: ['#e52d27','#6c757d','#28a745','#fd7e14','#6f42c1','#ffc107','#96ceb4']
-          }]
-        },
+        data: { labels: Object.keys(stats), datasets: [{ data: Object.values(stats), backgroundColor: ['#e52d27','#6c757d','#28a745','#fd7e14','#6f42c1','#ffc107','#96ceb4'] }] },
         options: { plugins: { legend: { position: 'bottom' } } }
       });
     }
 
-    // === Theme Toggle ===
+    // ==== THEME TOGGLE ====
     document.getElementById('themeToggle').addEventListener('click', () => {
-      const b = document.body;
-      b.dataset.theme = b.dataset.theme === 'light' ? 'dark' : 'light';
+      const body = document.body;
+      body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
     });
   </script>
 </body>
