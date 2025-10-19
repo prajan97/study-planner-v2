@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Study Planner - King's College London</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    /* Dark/Light theme variables */
+
+    /* === Theme Variables === */
     [data-theme="dark"] {
       --bg-primary: #1a1a1a;
       --bg-secondary: #2d2d2d;
@@ -20,239 +20,6 @@
       --card-bg: #2d2d2d;
       --input-bg: #3a3a3a;
     }
-
-    // Add event listeners for calendar interaction
-    function addPlannerEventListeners() {
-      const activitySelect = document.getElementById('activitySelect');
-      const clearPersonal = document.getElementById('clearPersonal');
-      const smartSuggest = document.getElementById('smartSuggest');
-      
-      if(activitySelect) {
-        activitySelect.addEventListener('change', e => {
-          currentActivity = e.target.value;
-        });
-      }
-      
-      if(clearPersonal) {
-        clearPersonal.addEventListener('click', () => {
-          document.querySelectorAll('.grid-cell').forEach(c => {
-            if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
-              c.className = 'grid-cell';
-            }
-          });
-          updateStats();
-        });
-      }
-      
-      if(smartSuggest) {
-        smartSuggest.addEventListener('click', () => {
-          smartSuggestSchedule();
-        });
-      }
-    }
-
-    // Update statistics display and chart
-    function updateStats() {
-      const cells = document.querySelectorAll('.grid-cell');
-      const countBy = {study:0, work:0, sleep:0, commute:0, family:0, social:0, other:0};
-      
-      cells.forEach(c => {
-        if(c.classList.length > 1) {
-          const act = c.classList[1];
-          if(countBy[act] !== undefined) countBy[act]++;
-        }
-      });
-      
-      console.log('Activity counts:', countBy);
-      updateStatsDisplay(countBy);
-      createScheduleChart(countBy);
-    }
-    
-    function updateStatsDisplay(counts) {
-      const statsSection = document.getElementById('statsSection');
-      const statsGrid = document.getElementById('statsGrid');
-      
-      const total = counts.work + counts.sleep + counts.study + counts.commute + counts.family + counts.social + counts.other;
-      const available = 168 - total;
-      
-      statsGrid.innerHTML = `
-        <div class="stat-item">
-          <div class="stat-value" style="color:#e52d27;">${counts.work}h</div>
-          <div class="stat-label">Work</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#6c757d;">${counts.sleep}h</div>
-          <div class="stat-label">Sleep</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#28a745;">${counts.study}h</div>
-          <div class="stat-label">Study</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#fd7e14;">${counts.commute}h</div>
-          <div class="stat-label">Commute</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#6f42c1;">${counts.family}h</div>
-          <div class="stat-label">Family</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#ffc107;">${counts.social}h</div>
-          <div class="stat-label">Social</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" style="color:#96ceb4;">${counts.other}h</div>
-          <div class="stat-label">Other</div>
-        </div>
-        ${available > 0 ? `<div class="stat-item" style="border: 2px solid #28a745;">
-          <div class="stat-value" style="color:#28a745;">${available}h</div>
-          <div class="stat-label">Free</div>
-        </div>` : ''}
-      `;
-      
-      if(total > counts.work + counts.sleep) {
-        statsSection.classList.add('show');
-      }
-    }
-    
-    function createScheduleChart(counts) {
-      const canvas = document.getElementById('scheduleChart');
-      if (!canvas) return;
-      
-      const ctx = canvas.getContext('2d');
-      if(scheduleChart) scheduleChart.destroy();
-      
-      const data = [counts.work, counts.sleep, counts.study, counts.commute, counts.family, counts.social, counts.other];
-      const labels = ['Work', 'Sleep', 'Study', 'Commute', 'Family', 'Social', 'Other'];
-      const colors = ['#e52d27', '#6c757d', '#28a745', '#fd7e14', '#6f42c1', '#ffc107', '#96ceb4'];
-      
-      scheduleChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: data,
-            backgroundColor: colors,
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      });
-    }
-    
-    // Helper function to get work days based on pattern
-    function getWorkDays(workPattern) {
-      const patterns = {
-        'office-5': [0, 1, 2, 3, 4],        // Mon-Fri
-        'office-4': [0, 1, 2, 3],           // Mon-Thu
-        'office-3': [0, 2, 4],              // Mon, Wed, Fri
-        'office-2': [1, 3],                 // Tue, Thu
-        'hybrid-alt': [0, 2, 4],            // Mon, Wed, Fri
-        'remote': [],                       // No office days
-        'irregular': [0, 2, 4]              // Default to 3 days
-      };
-      return patterns[workPattern] || patterns['office-5'];
-    }
-    
-    // Helper function to get work hours based on schedule type
-    function getWorkHours(workType) {
-      const schedules = {
-        'none': {start: 9, end: 9},
-        'part-time-16': {start: 9, end: 13},
-        'part-time-20': {start: 9, end: 13},
-        'part-time-24': {start: 9, end: 15},
-        'standard': {start: 9, end: 17},
-        'extended-40': {start: 8, end: 17},
-        'extended-45': {start: 7, end: 17},
-        'long-50': {start: 7, end: 18},
-        'long-55': {start: 7, end: 19},
-        'custom': {start: 9, end: 13}
-      };
-      return schedules[workType] || schedules.standard;
-    }
-    
-    // Helper function to get sleep hours based on schedule type
-    function getSleepHours(sleepType) {
-      const schedules = {
-        'custom': {start: 23, end: 6},
-        'short': {start: 23.5, end: 6.5},
-        'light': {start: 23, end: 6},
-        'average': {start: 22.5, end: 6},
-        'good': {start: 22, end: 6},
-        'extended': {start: 21.5, end: 6}
-      };
-      return schedules[sleepType] || schedules.average;
-    }
-    
-    // Populate schedule based on user selections
-    function populateSchedule(workType, workPattern, sleepType) {
-      console.log('populateSchedule called with:', workType, workPattern, sleepType);
-      
-      // Clear all existing schedule
-      document.querySelectorAll('.grid-cell').forEach(c => c.className = 'grid-cell');
-      
-      // Schedule work based on pattern
-      const workHours = getWorkHours(workType);
-      const workDays = getWorkDays(workPattern);
-      
-      console.log('Work hours:', workHours, 'Work days:', workDays);
-      
-      workDays.forEach(day => {
-        for(let hour = workHours.start; hour < workHours.end; hour++) {
-          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
-          if(cell) {
-            cell.classList.add('work');
-          }
-        }
-      });
-      
-      // Schedule sleep every night
-      const sleepHours = getSleepHours(sleepType);
-      console.log('Sleep hours:', sleepHours);
-      
-      for(let day = 0; day < 7; day++) {
-        let startHour = sleepHours.start;
-        let endHour = sleepHours.end;
-        
-        // Handle fractional hours
-        if(startHour % 1 !== 0) {
-          startHour = Math.floor(startHour);
-        }
-        if(endHour % 1 !== 0) {
-          endHour = Math.ceil(endHour);
-        }
-        
-        // Handle sleep that crosses midnight
-        if(startHour >= 21) {
-          for(let hour = startHour; hour < 24; hour++) {
-            const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
-            if(cell) {
-              cell.classList.add('sleep');
-            }
-          }
-        }
-        
-        // Morning sleep hours
-        for(let hour = 0; hour < endHour; hour++) {
-          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
-          if(cell) {
-            cell.classList.add('sleep');
-          }
-        }
-      }
-      
-      console.log('Schedule populated, calling updateStats');
-      updateStats();
-    }
-    
     [data-theme="light"] {
       --bg-primary: #f8f9fa;
       --bg-secondary: #ffffff;
@@ -264,701 +31,312 @@
       --card-bg: #ffffff;
       --input-bg: #ffffff;
     }
-    
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-primary);
-      min-height: 100vh;
       color: var(--text-primary);
-      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
     }
-    
+
+    /* === Header === */
     .header {
       background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
       color: white;
       padding: 40px 0;
       box-shadow: 0 4px 20px rgba(229, 45, 39, 0.3);
     }
-    
     .header-content {
       max-width: 1200px;
-      margin: 0 auto;
+      margin: auto;
       padding: 0 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
-    .header-content > div:first-child {
-      text-align: center;
-      flex: 1;
-    }
-    
-    .header h1 { font-size: 32px; margin-bottom: 8px; font-weight: 700; }
-    .header .subtitle { font-size: 16px; opacity: 0.95; }
-    .header .uni-name { margin-top: 12px; font-size: 12px; font-weight: 600; letter-spacing: 2px; opacity: 0.85; }
-    
+    .header h1 { font-size: 32px; font-weight: 700; }
+    .subtitle { font-size: 16px; opacity: 0.95; }
+    .uni-name { margin-top: 8px; font-size: 12px; letter-spacing: 1.5px; }
+
     .header-actions {
       display: flex;
-      gap: 12px;
-      align-items: center;
+      gap: 10px;
     }
-    
-    .theme-toggle, .action-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50px;
-      padding: 10px 16px;
+    .action-btn, .theme-toggle {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 40px;
       color: white;
+      padding: 10px 16px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      backdrop-filter: blur(10px);
-      font-weight: 500;
+      transition: 0.3s;
     }
-    
-    .theme-toggle {
-      padding: 12px;
-      min-width: 44px;
-      justify-content: center;
-    }
-    
-    .theme-toggle:hover, .action-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
+    .action-btn:hover, .theme-toggle:hover {
+      background: rgba(255,255,255,0.3);
       transform: translateY(-2px);
     }
-    
-    .theme-icon, .action-icon {
-      font-size: 16px;
-    }
-    
+
+    /* === Layout === */
     .main-container {
       max-width: 1200px;
-      margin: 0 auto;
-      padding: 30px 20px;
+      margin: auto;
       display: grid;
       grid-template-columns: 350px 1fr;
       gap: 30px;
-      min-height: calc(100vh - 200px);
+      padding: 30px 20px;
     }
-    
-    @media (max-width: 1200px) {
-      .main-container {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
+    @media (max-width: 1000px) {
+      .main-container { grid-template-columns: 1fr; }
     }
-    
-    .left-panel {
+
+    .left-panel, .right-panel {
       background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 25px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid var(--border-color);
-      height: fit-content;
-      position: sticky;
-      top: 20px;
     }
-    
-    .right-panel {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid var(--border-color);
-      min-height: 500px;
-    }
-    
-    .panel-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 15px;
-    }
-    
-    .intro-text {
-      background: var(--bg-tertiary);
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      border-left: 3px solid #e52d27;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    
-    .input-group { 
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 14px;
-    }
-    
-    select, input[type="number"] {
+
+    /* === Inputs === */
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    select {
       width: 100%;
-      padding: 14px 16px;
+      padding: 10px;
       border: 2px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 15px;
-      transition: all 0.3s ease;
-      background: var(--input-bg);
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-    
-    select option {
-      background: var(--input-bg);
-      color: var(--text-primary);
-    }
-    
-    select:focus, input[type="number"]:focus {
-      outline: none;
-      border-color: #e52d27;
-      box-shadow: 0 0 0 4px rgba(229, 45, 39, 0.1);
-    }
-    
-    .helper-text { 
-      font-size: 12px; 
-      color: var(--text-muted); 
-      margin-top: 6px; 
-      line-height: 1.4;
-    }
-    
-    .calculate-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 15px;
-      box-shadow: 0 4px 15px rgba(229, 45, 39, 0.2);
-    }
-    
-    .calculate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(229, 45, 39, 0.35);
-    }
-    
-    .schedule-info {
-      background: var(--bg-tertiary);
-      padding: 16px;
-      border-radius: 10px;
-      margin-top: 15px;
-      border-left: 3px solid #17a2b8;
-      font-size: 13px;
-      color: var(--text-secondary);
-      font-weight: 500;
-      display: none;
-    }
-    
-    .schedule-info.show { display: block; }
-    
-    [data-theme="dark"] .schedule-info {
-      background: #1a2a2a;
-      border-left: 3px solid #17a2b8;
-      color: #b0d0df;
-    }
-    
-    .calendar-container {
-      display: none;
-    }
-    
-    .calendar-container.show { display: block; }
-    
-    .calendar-header {
-      background: var(--bg-tertiary);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      text-align: center;
-      color: var(--text-primary);
-    }
-    
-    .calendar-header p {
-      color: var(--text-secondary) !important;
-    }
-    
-    .calendar-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    
-    .activity-select-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .activity-select-group label {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0;
-      white-space: nowrap;
-    }
-    
-    .control-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .btn {
-      padding: 10px 16px;
       border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--text-primary);
       font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-      text-align: center;
-      white-space: nowrap;
     }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+    .calculate-btn {
+      background: linear-gradient(135deg, #e52d27, #b31217);
       color: white;
-      box-shadow: 0 4px 12px rgba(229,45,39,0.25);
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
     }
-    
-    .btn-secondary {
-      background: var(--card-bg);
-      color: #e52d27;
-      border: 2px solid #e52d27;
-    }
-    
-    .btn-secondary:hover { 
-      background: #e52d27; 
-      color: white; 
-    }
-    
-    .legend {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
-    
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-    
-    .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-    }
-    
+    .calculate-btn:hover { transform: translateY(-2px); }
+
+    /* === Schedule === */
+    .calendar-container { display: none; }
+    .calendar-container.show { display: block; }
+
     .calendar-grid {
-      background: var(--card-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border: 1px solid var(--border-color);
-    }
-    
-    .weekly-grid {
       display: grid;
       grid-template-columns: 60px repeat(7, 1fr);
       grid-auto-rows: 22px;
-      user-select: none;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
     }
-    
     .grid-header {
       background: var(--bg-tertiary);
-      border: 1px solid var(--border-color);
-      font-size: 11px;
       text-align: center;
-      line-height: 22px;
+      font-size: 11px;
       font-weight: 600;
-      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      line-height: 22px;
     }
-    
     .grid-cell {
       border: 1px solid var(--border-color);
       text-align: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
       font-size: 10px;
-      line-height: 22px;
-      background: var(--card-bg);
+      cursor: pointer;
+      transition: 0.15s;
     }
-    
-    .grid-cell:hover:not(.work):not(.sleep) { 
-      background: rgba(229, 45, 39, 0.2);
-    }
-    
-    .grid-cell.study { background: #28a745; color: white; }
+
+    /* === Activity Colors === */
     .grid-cell.work { background: #e52d27; color: white; }
     .grid-cell.sleep { background: #6c757d; color: white; }
+    .grid-cell.study { background: #28a745; color: white; }
     .grid-cell.commute { background: #fd7e14; color: white; }
     .grid-cell.family { background: #6f42c1; color: white; }
-    .grid-cell.social { background: #ffc107; color: #212529; font-weight:600; }
+    .grid-cell.social { background: #ffc107; color: #212529; font-weight: 600; }
     .grid-cell.other { background: #96ceb4; color: white; }
-    
-    .stats-section {
-      margin-top: 25px;
-      display: none;
-    }
-    
+
+    /* === Stats === */
+    .stats-section { margin-top: 20px; display: none; }
     .stats-section.show { display: block; }
-    
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
     }
-    
     .stat-item {
-      text-align: center;
-      padding: 12px 8px;
-      background: var(--bg-tertiary);
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-    }
-    
-    .stat-value {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: var(--text-primary);
-    }
-    
-    .stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .chart-container {
-      max-width: 300px;
-      margin: 0 auto;
-      height: 200px;
-    }
-    
-    .usage-tip {
       background: var(--bg-tertiary);
       border: 1px solid var(--border-color);
-      padding: 12px;
       border-radius: 8px;
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-bottom: 15px;
       text-align: center;
+      padding: 10px;
     }
-    
-    [data-theme="dark"] .usage-tip {
-      background: #2a2a1a;
-      border: 1px solid #4a4a2a;
-      color: #e0e0aa;
-    }
-    
-    #calendarPlaceholder {
-      color: var(--text-muted) !important;
-    }
-    
-    #calendarPlaceholder h3 {
-      color: var(--text-secondary) !important;
-    }
+    .stat-value { font-size: 18px; font-weight: 700; }
+    .chart-container { width: 100%; max-width: 300px; margin: 10px auto; }
+
   </style>
 </head>
 <body data-theme="light">
+
+  <!-- ===== HEADER ===== -->
   <div class="header">
     <div class="header-content">
       <div>
         <h1>Study Planner</h1>
-        <div class="subtitle">Realistic recommendations for your schedule</div>
+        <div class="subtitle">Realistic schedule generator</div>
         <div class="uni-name">KING'S COLLEGE LONDON</div>
       </div>
       <div class="header-actions">
-        <button id="printBtn" class="action-btn" aria-label="Print schedule">
-          <span>Print</span>
-        </button>
-        <button id="downloadBtn" class="action-btn" aria-label="Download schedule">
-          <span>Download</span>
-        </button>
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-          <span class="theme-icon">◐</span>
-        </button>
+        <button class="action-btn" id="printBtn">Print</button>
+        <button class="action-btn" id="downloadBtn">Download</button>
+        <button class="theme-toggle" id="themeToggle">◐</button>
       </div>
     </div>
   </div>
 
+  <!-- ===== MAIN CONTENT ===== -->
   <div class="main-container">
-    <!-- Left Panel: Form Controls -->
     <div class="left-panel">
-      <div class="panel-title">Your Commitments</div>
-      
-      <div class="intro-text">
-        Plan your study time around your existing work and sleep schedule for realistic academic goals.
-      </div>
-      
+      <h3>Your Commitments</h3>
+
       <form id="calculatorForm">
-        <div class="input-group">
-          <label>Work Schedule</label>
-          <select id="workSchedule" required>
-            <option value="">Select your work schedule</option>
-            <option value="none" data-hours="0">No work commitments</option>
-            <option value="part-time-16" data-hours="16">Part-time: 9am-1pm (16 hrs/week)</option>
-            <option value="part-time-20" data-hours="20">Part-time: 9am-2pm (20 hrs/week)</option>
-            <option value="part-time-24" data-hours="24">Part-time: 9am-3pm (24 hrs/week)</option>
-            <option value="standard" data-hours="37.5" selected>Standard: 9am-5pm (37.5 hrs/week)</option>
-            <option value="extended-40" data-hours="40">Extended: 8am-5pm (40 hrs/week)</option>
-            <option value="extended-45" data-hours="45">Extended: 7am-5pm (45 hrs/week)</option>
-            <option value="long-50" data-hours="50">Long hours: 7am-6pm (50 hrs/week)</option>
-            <option value="long-55" data-hours="55">Very long: 7am-7pm (55 hrs/week)</option>
-            <option value="custom" data-hours="20">Custom hours per week</option>
-          </select>
-          <div class="helper-text">Your actual work hours only</div>
-        </div>
+        <label>Work Schedule</label>
+        <select id="workSchedule" required>
+          <option value="">Select...</option>
+          <option value="none" data-hours="0">No work</option>
+          <option value="part-time-16" data-hours="16">Part-time (16h)</option>
+          <option value="standard" data-hours="37.5" selected>Standard (37.5h)</option>
+          <option value="extended-45" data-hours="45">Long (45h)</option>
+        </select>
 
-        <div class="input-group">
-          <label>Work Location Pattern</label>
-          <select id="workPattern">
-            <option value="office-5" selected>Office 5 days/week (Mon-Fri)</option>
-            <option value="office-4">Office 4 days/week</option>
-            <option value="office-3">Office 3 days/week</option>
-            <option value="office-2">Office 2 days/week</option>
-            <option value="hybrid-alt">Hybrid: Alternating weeks</option>
-            <option value="remote">Fully remote/WFH</option>
-            <option value="irregular">Irregular schedule</option>
-          </select>
-          <div class="helper-text">How often do you physically go to the workplace?</div>
-        </div>
+        <label>Work Pattern</label>
+        <select id="workPattern">
+          <option value="office-5" selected>Office 5 days/week</option>
+          <option value="remote">Remote</option>
+        </select>
 
-        <div class="input-group">
-          <label>Commute & Travel</label>
-          <select id="commuteSchedule">
-            <option value="none" data-hours="0">No commute / Fully remote</option>
-            <option value="minimal" data-hours="2.5">Minimal: 30min daily (2.5 hrs/week)</option>
-            <option value="short" data-hours="5">Short: 1hr daily (5 hrs/week)</option>
-            <option value="moderate" data-hours="7.5" selected>Moderate: 1.5hr daily (7.5 hrs/week)</option>
-            <option value="long" data-hours="10">Long: 2hr daily (10 hrs/week)</option>
-            <option value="very-long" data-hours="12.5">Very long: 2.5hr daily (12.5 hrs/week)</option>
-            <option value="extreme" data-hours="15">Extreme: 3hr+ daily (15 hrs/week)</option>
-            <option value="custom" data-hours="5">Custom hours per week</option>
-          </select>
-          <div class="helper-text">Daily commute time when you go to office/uni, plus weekend travel</div>
-        </div>
+        <label>Commute</label>
+        <select id="commuteSchedule">
+          <option value="none" data-hours="0">None</option>
+          <option value="short" data-hours="5">Short (1h/day)</option>
+          <option value="moderate" data-hours="7.5" selected>Moderate (1.5h/day)</option>
+        </select>
 
-        <div class="input-group">
-          <label>Sleep Schedule</label>
-          <select id="sleepSchedule" required>
-            <option value="">Select your sleep pattern</option>
-            <option value="custom" data-hours="30">Custom hours per week</option>
-            <option value="short" data-hours="35">Short: 11:30pm-6:30am (35 hrs/week)</option>
-            <option value="light" data-hours="42">Light: 11pm-6am (42 hrs/week)</option>
-            <option value="average" data-hours="49" selected>Average: 10:30pm-6am (49 hrs/week)</option>
-            <option value="good" data-hours="56">Good: 10pm-6am (56 hrs/week)</option>
-            <option value="extended" data-hours="63">Extended: 9:30pm-6am (63 hrs/week)</option>
-          </select>
-          <div class="helper-text">Automatically scheduled every night</div>
-        </div>
+        <label>Sleep Schedule</label>
+        <select id="sleepSchedule" required>
+          <option value="">Select...</option>
+          <option value="average" data-hours="49" selected>Average (10:30–6:00)</option>
+          <option value="good" data-hours="56">Good (10:00–6:00)</option>
+        </select>
 
-        <button type="submit" class="calculate-btn">Generate Study Plan</button>
+        <button class="calculate-btn" type="submit">Generate Study Plan</button>
       </form>
 
-      <div id="scheduleInfo" class="schedule-info">
-        <div style="font-weight: 600; margin-bottom: 8px;">Schedule Overview</div>
+      <div id="scheduleInfo" style="display:none; margin-top:15px;">
+        <h4>Schedule Overview</h4>
         <div id="scheduleBreakdown"></div>
       </div>
 
-      <!-- Stats Section -->
       <div id="statsSection" class="stats-section">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center;">Weekly Breakdown</div>
+        <h4 style="text-align:center;">Weekly Breakdown</h4>
         <div id="statsGrid" class="stats-grid"></div>
-        <div class="chart-container">
-          <canvas id="scheduleChart" width="300" height="200"></canvas>
-        </div>
+        <div class="chart-container"><canvas id="scheduleChart"></canvas></div>
       </div>
     </div>
 
-    <!-- Right Panel: Calendar -->
     <div class="right-panel">
-      <div class="panel-title">Interactive Schedule Builder</div>
-      
+      <h3>Interactive Schedule</h3>
       <div id="calendarContainer" class="calendar-container">
-        <div class="calendar-header">
-          <p style="color:#495057; margin-bottom:15px; font-weight:500;">
-            <strong>Work & Sleep</strong> are pre-filled. Schedule your remaining activities below.
-          </p>
-          
-          <div class="legend">
-            <div class="legend-item">
-              <div class="legend-color" style="background:#e52d27;"></div>
-              <span>Work (Auto)</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background:#6c757d;"></div>
-              <span>Sleep (Auto)</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background:#28a745;"></div>
-              <span>Study</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background:#fd7e14;"></div>
-              <span>Commute</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background:#6f42c1;"></div>
-              <span>Family</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background:#ffc107;"></div>
-              <span>Social</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background:#96ceb4;"></div>
-              <span>Other</span>
-            </div>
-          </div>
+        <div style="margin-bottom:10px;">
+          <label>Paint with:</label>
+          <select id="activitySelect">
+            <option value="study" selected>Study</option>
+            <option value="commute">Commute</option>
+            <option value="family">Family</option>
+            <option value="social">Social</option>
+            <option value="other">Other</option>
+          </select>
+          <button id="clearPersonal" class="action-btn" style="margin-left:10px;">Clear</button>
+          <button id="smartSuggest" class="action-btn">Smart Fill</button>
         </div>
-        
-        <div class="calendar-controls">
-          <div class="activity-select-group">
-            <label>Paint with:</label>
-            <select id="activitySelect" style="padding:8px 12px; border-radius:8px; border:2px solid #dee2e6; font-size:14px; background:white;">
-              <option value="study" selected>Study Sessions</option>
-              <option value="commute">Commute & Travel</option>
-              <option value="family">Family Time</option>
-              <option value="social">Social & Fun</option>
-              <option value="other">Other Commitments</option>
-            </select>
-          </div>
-          
-          <div class="control-buttons">
-            <button id="clearPersonal" class="btn btn-secondary">Clear Personal</button>
-            <button id="smartSuggest" class="btn btn-primary">Smart Fill</button>
-          </div>
-        </div>
-        
-        <div class="usage-tip">
-          <strong>Tip:</strong> Click and drag to fill time slots. Right-click to remove activities.
-        </div>
-        
-        <div class="calendar-grid">
-          <div id="weeklyGrid" class="weekly-grid"></div>
-        </div>
+
+        <div class="calendar-grid" id="weeklyGrid"></div>
       </div>
 
-      <!-- Placeholder when no schedule generated -->
-      <div id="calendarPlaceholder" style="text-align: center; padding: 80px 20px; color: #6c757d;">
-        <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
-        <h3 style="margin-bottom: 12px; color: #495057;">Your Schedule Will Appear Here</h3>
-        <p>Select your work and sleep schedules on the left to get started.</p>
+      <div id="calendarPlaceholder" style="text-align:center; padding:60px; color:var(--text-muted);">
+        <h3>📅 Your schedule will appear here</h3>
+        <p>Select your work and sleep schedule on the left to begin.</p>
       </div>
     </div>
   </div>
 
+  <!-- ===== SCRIPT ===== -->
   <script>
-    // Global variables
-    let scheduleChart;
     let isDragging = false;
     let currentActivity = 'study';
+    let scheduleChart;
 
-    // Form submission
-    document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+    // === Handle Form Submit ===
+    document.getElementById('calculatorForm').addEventListener('submit', e => {
       e.preventDefault();
-      
-      const workSchedule = document.getElementById('workSchedule');
-      const workPattern = document.getElementById('workPattern');
-      const commuteSchedule = document.getElementById('commuteSchedule');
-      const sleepSchedule = document.getElementById('sleepSchedule');
-      
-      console.log('Form submitted'); // Debug log
-      console.log('Work:', workSchedule.value);
-      console.log('Sleep:', sleepSchedule.value);
-      
-      if (!workSchedule.value || !sleepSchedule.value) {
-        alert('Please select both work and sleep schedules');
-        return;
-      }
-      
-      const work = parseInt(workSchedule.selectedOptions[0].dataset.hours);
-      const commute = parseInt(commuteSchedule.selectedOptions[0].dataset.hours);
-      const sleep = parseInt(sleepSchedule.selectedOptions[0].dataset.hours);
-      
-      console.log('Hours - Work:', work, 'Commute:', commute, 'Sleep:', sleep); // Debug log
-      
-      const totalCommitted = work + commute + sleep;
-      let available = 168 - totalCommitted;
-      if (available < 0) available = 0;
-      
-      // Show schedule info
-      const scheduleInfo = document.getElementById('scheduleInfo');
+      const work = parseFloat(document.getElementById('workSchedule').selectedOptions[0].dataset.hours);
+      const commute = parseFloat(document.getElementById('commuteSchedule').selectedOptions[0].dataset.hours);
+      const sleep = parseFloat(document.getElementById('sleepSchedule').selectedOptions[0].dataset.hours);
+
+      const total = work + commute + sleep;
+      const available = Math.max(0, 168 - total);
+
+      const info = document.getElementById('scheduleInfo');
       const breakdown = document.getElementById('scheduleBreakdown');
       breakdown.innerHTML = `
-        <div>Work: <strong>${work} hours/week</strong></div>
-        <div>Commute: <strong>${commute} hours/week</strong></div>
-        <div>Sleep: <strong>${sleep} hours/week</strong></div>
-        <div style="color: #28a745; font-weight: 600;">Available: <strong>${available} hours/week</strong></div>
+        Work: <strong>${work}h</strong><br>
+        Commute: <strong>${commute}h</strong><br>
+        Sleep: <strong>${sleep}h</strong><br>
+        <span style="color:#28a745;">Available: <strong>${available}h/week</strong></span>
       `;
-      scheduleInfo.classList.add('show');
-      
-      // Initialize and populate calendar
-      populateSchedule(workSchedule.value, workPattern.value, sleepSchedule.value);
-      
-      // Show calendar
+      info.style.display = 'block';
+
+      populateSchedule(
+        document.getElementById('workSchedule').value,
+        document.getElementById('workPattern').value,
+        document.getElementById('sleepSchedule').value,
+        document.getElementById('commuteSchedule').value
+      );
+
       document.getElementById('calendarPlaceholder').style.display = 'none';
       document.getElementById('calendarContainer').classList.add('show');
-      
-      console.log('Calendar should be visible now'); // Debug log
-      
-      // Add event listeners
-      setTimeout(() => {
-        addPlannerEventListeners();
-        console.log('Event listeners added'); // Debug log
-      }, 100);
+      addPlannerEventListeners();
     });
 
-    // Initialize grid
+    // === Create Grid ===
     function initWeeklyGrid() {
       const grid = document.getElementById('weeklyGrid');
-      const days = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       grid.innerHTML = '';
-      
+      const days = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+      // Header
       days.forEach(d => {
         const div = document.createElement('div');
         div.className = 'grid-header';
         div.textContent = d;
         grid.appendChild(div);
       });
-      
-      for(let hour = 0; hour < 24; hour++) {
+
+      // 24 hours
+      for (let h = 0; h < 24; h++) {
         const label = document.createElement('div');
         label.className = 'grid-header';
-        label.textContent = `${hour}:00`;
+        label.textContent = `${h}:00`;
         grid.appendChild(label);
-        
-        for(let day = 0; day < 7; day++) {
+
+        for (let d = 0; d < 7; d++) {
           const cell = document.createElement('div');
           cell.className = 'grid-cell';
-          cell.dataset.day = day;
-          cell.dataset.hour = hour;
+          cell.dataset.hour = h;
+          cell.dataset.day = d;
           cell.addEventListener('mousedown', handleCellClick);
           cell.addEventListener('mouseover', handleCellDrag);
           grid.appendChild(cell);
@@ -966,68 +344,127 @@
       }
     }
 
-    // Mouse event handlers
-    document.addEventListener('mousedown', () => isDragging = true);
-    document.addEventListener('mouseup', () => isDragging = false);
-    
+    // === Auto Fill Schedule ===
+    function populateSchedule(workType, workPattern, sleepType, commuteType) {
+      initWeeklyGrid();
+
+      const cells = document.querySelectorAll('.grid-cell');
+      // Sleep (23–6)
+      cells.forEach(c => {
+        const h = +c.dataset.hour;
+        if (h >= 23 || h < 6) c.classList.add('sleep');
+      });
+
+      // Work hours Mon–Fri
+      const workTimes = {
+        'standard': { start: 9, end: 17 },
+        'part-time-16': { start: 9, end: 13 },
+        'extended-45': { start: 7, end: 17 }
+      };
+      const wh = workTimes[workType] || workTimes['standard'];
+      cells.forEach(c => {
+        const h = +c.dataset.hour, d = +c.dataset.day;
+        if (d < 5 && h >= wh.start && h < wh.end) c.classList.add('work');
+      });
+
+      // Commute before/after
+      const commuteMap = { short: 1, moderate: 1.5 };
+      const commuteTime = commuteMap[commuteType] || 0;
+      cells.forEach(c => {
+        const h = +c.dataset.hour, d = +c.dataset.day;
+        if (d < 5 && commuteTime > 0) {
+          if (h >= wh.start - commuteTime && h < wh.start) c.classList.add('commute');
+          if (h >= wh.end && h < wh.end + commuteTime) c.classList.add('commute');
+        }
+      });
+
+      updateStats();
+    }
+
+    // === Mouse Handling ===
+    document.addEventListener('mousedown', () => (isDragging = true));
+    document.addEventListener('mouseup', () => (isDragging = false));
+    document.addEventListener('contextmenu', e => {
+      if (e.target.classList.contains('grid-cell')) e.preventDefault();
+    });
+
     function handleCellClick(e) {
       const cell = e.target;
-      if(e.button === 2) {
+      if (e.button === 2) {
         cell.className = 'grid-cell';
         updateStats();
         return;
       }
-      
-      if(cell.classList.contains('work') || cell.classList.contains('sleep')) {
-        return;
-      }
-      
-      const activity = currentActivity;
-      const wasSelected = cell.classList.contains(activity);
-      cell.className = 'grid-cell';
-      if(!wasSelected) cell.classList.add(activity);
-      updateStats();
-    }
-    
-    function handleCellDrag(e) {
-      if(!isDragging) return;
-      const cell = e.target;
-      if(!cell.classList.contains('grid-cell')) return;
-      
-      if(cell.classList.contains('work') || cell.classList.contains('sleep')) {
-        return;
-      }
-      
+      if (cell.classList.contains('work') || cell.classList.contains('sleep')) return;
       cell.className = 'grid-cell ' + currentActivity;
       updateStats();
     }
-    
-    // Prevent context menu
-    document.addEventListener('contextmenu', e => {
-      if(e.target.classList.contains('grid-cell')) {
-        e.preventDefault();
-      }
-    });
 
-    // Add event listeners
+    function handleCellDrag(e) {
+      if (!isDragging) return;
+      const cell = e.target;
+      if (!cell.classList.contains('grid-cell')) return;
+      if (cell.classList.contains('work') || cell.classList.contains('sleep')) return;
+      cell.className = 'grid-cell ' + currentActivity;
+      updateStats();
+    }
+
+    // === Planner Controls ===
     function addPlannerEventListeners() {
-      const activitySelect = document.getElementById('activitySelect');
-      const clearPersonal = document.getElementById('clearPersonal');
-      const smartSuggest = document.getElementById('smartSuggest');
-      
-      if(activitySelect) {
-        activitySelect.addEventListener('change', e => {
-          currentActivity = e.target.value;
+      document.getElementById('activitySelect').addEventListener('change', e => currentActivity = e.target.value);
+
+      document.getElementById('clearPersonal').addEventListener('click', () => {
+        document.querySelectorAll('.grid-cell').forEach(c => {
+          if (!c.classList.contains('work') && !c.classList.contains('sleep')) c.className = 'grid-cell';
         });
-      }
-      
-      if(clearPersonal) {
-        clearPersonal.addEventListener('click', () => {
-          document.querySelectorAll('.grid-cell').forEach(c => {
-            if(!c.classList.contains('work') && !c.classList.contains('sleep')) {
-              c.className = 'grid-cell';
-            }
-          });
-          updateStats();
+        updateStats();
+      });
+
+      document.getElementById('smartSuggest').addEventListener('click', () => {
+        document.querySelectorAll('.grid-cell').forEach(c => {
+          const h = +c.dataset.hour, d = +c.dataset.day;
+          if (!c.classList.contains('work') && !c.classList.contains('sleep') && !c.classList.contains('commute')) {
+            if ((h >= 18 && h < 22 && d < 5) || (h >= 10 && h < 18 && d >= 5)) c.classList.add('study');
+          }
         });
-      }
+        updateStats();
+      });
+    }
+
+    // === Stats ===
+    function updateStats() {
+      const cells = document.querySelectorAll('.grid-cell');
+      const stats = { work: 0, sleep: 0, study: 0, commute: 0, family: 0, social: 0, other: 0 };
+      cells.forEach(c => {
+        for (let key in stats) if (c.classList.contains(key)) stats[key]++;
+      });
+
+      const statsGrid = document.getElementById('statsGrid');
+      statsGrid.innerHTML = Object.entries(stats)
+        .map(([k, v]) => `<div class="stat-item"><div class="stat-value">${v}</div><div class="stat-label">${k}</div></div>`)
+        .join('');
+      document.getElementById('statsSection').classList.add('show');
+
+      const ctx = document.getElementById('scheduleChart').getContext('2d');
+      if (scheduleChart) scheduleChart.destroy();
+      scheduleChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(stats),
+          datasets: [{
+            data: Object.values(stats),
+            backgroundColor: ['#e52d27','#6c757d','#28a745','#fd7e14','#6f42c1','#ffc107','#96ceb4']
+          }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    // === Theme Toggle ===
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const b = document.body;
+      b.dataset.theme = b.dataset.theme === 'light' ? 'dark' : 'light';
+    });
+  </script>
+</body>
+</html>
