@@ -329,6 +329,10 @@
       color: #495057;
     }
     
+    [data-theme="dark"] .legend-item {
+      color: #ffffff;
+    }
+    
     .legend-color {
       width: 14px;
       height: 14px;
@@ -377,7 +381,7 @@
     .grid-cell.work { background: #e52d27; color: white; }
     .grid-cell.commute { background: #fd7e14; color: white; }
     .grid-cell.sleep { background: #6c757d; color: white; }
-    .grid-cell.family { background: #ff6b6b; color: white; }
+    .grid-cell.family { background: #007bff; color: white; }
     .grid-cell.social { background: #ffc107; color: #212529; font-weight:600; }
     .grid-cell.other { background: #96ceb4; color: white; }
     
@@ -722,7 +726,7 @@
               <span>Study</span>
             </div>
             <div class="legend-item">
-              <div class="legend-color" style="background:#ff6b6b;"></div>
+              <div class="legend-color" style="background:#007bff;"></div>
               <span>Family</span>
             </div>
             <div class="legend-item">
@@ -836,14 +840,14 @@
           checkboxes.forEach(cb => cb.checked = false);
           
           if (this.value === 'hybrid-2') {
-            // Default to Wed, Thu for 2-day office
-            document.querySelector('input[value="wednesday"]').checked = true;
-            document.querySelector('input[value="thursday"]').checked = true;
-          } else if (this.value === 'hybrid-3') {
-            // Default to Mon, Wed, Fri for 3-day office
+            // 2 days WFH, 3 days office - select 3 office days (Mon, Wed, Fri)
             document.querySelector('input[value="monday"]').checked = true;
             document.querySelector('input[value="wednesday"]').checked = true;
             document.querySelector('input[value="friday"]').checked = true;
+          } else if (this.value === 'hybrid-3') {
+            // 3 days WFH, 2 days office - select 2 office days (Tue, Thu)
+            document.querySelector('input[value="tuesday"]').checked = true;
+            document.querySelector('input[value="thursday"]').checked = true;
           }
         } else {
           hybridDaysGroup.style.display = 'none';
@@ -961,20 +965,21 @@
     function populateSchedule(workType, commuteType, sleepType, arrangementType) {
       document.querySelectorAll('.grid-cell').forEach(c => c.className = 'grid-cell');
       
-      // Get office days for hybrid workers
+      // Get work days and office days separately
+      const workDays = getWorkDays(arrangementType);
       const officeDays = getOfficeDays(arrangementType);
       
-      // Schedule work
+      // Schedule work on all work days (Mon-Fri for most arrangements)
       const workHours = getWorkHours(workType);
-      officeDays.forEach(day => {
+      workDays.forEach(day => {
         for(let hour = workHours.start; hour < workHours.end; hour++) {
           const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
           if(cell) cell.classList.add('work');
         }
       });
       
-      // Schedule commute (only on office days and if commute exists)
-      if (commuteType !== 'none') {
+      // Schedule commute only on office days (and if commute exists)
+      if (commuteType !== 'none' && officeDays.length > 0) {
         const commuteHours = getCommuteHours(commuteType, workHours);
         officeDays.forEach(day => {
           // Morning commute
@@ -1018,7 +1023,7 @@
     
     function getOfficeDays(arrangementType) {
       if (arrangementType === 'remote') {
-        return []; // No office days
+        return []; // No office days for fully remote
       } else if (arrangementType.startsWith('hybrid')) {
         // Get selected days from checkboxes
         const checkedBoxes = document.querySelectorAll('.office-day-checkbox:checked');
@@ -1029,6 +1034,17 @@
       } else {
         // Full office or flexible - default to Mon-Fri
         return [0, 1, 2, 3, 4];
+      }
+    }
+    
+    function getWorkDays(arrangementType) {
+      // Work schedule should always appear for all arrangements except fully remote
+      if (arrangementType === 'remote') {
+        return [0, 1, 2, 3, 4]; // Show work schedule at home
+      } else if (arrangementType.startsWith('hybrid')) {
+        return [0, 1, 2, 3, 4]; // Show work all weekdays for hybrid
+      } else {
+        return [0, 1, 2, 3, 4]; // Show work all weekdays for office
       }
     }
     
@@ -1120,7 +1136,7 @@
           <div class="stat-label">Study</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value" style="color:#ff6b6b;">${counts.family}h</div>
+          <div class="stat-value" style="color:#007bff;">${counts.family}h</div>
           <div class="stat-label">Family</div>
         </div>
         <div class="stat-item">
@@ -1151,7 +1167,7 @@
       
       const data = [counts.work, counts.commute, counts.sleep, counts.study, counts.family, counts.social, counts.other];
       const labels = ['Work', 'Commute', 'Sleep', 'Study', 'Family', 'Social', 'Other'];
-      const colors = ['#e52d27', '#fd7e14', '#6c757d', '#28a745', '#ff6b6b', '#ffc107', '#96ceb4'];
+      const colors = ['#e52d27', '#fd7e14', '#6c757d', '#28a745', '#007bff', '#ffc107', '#96ceb4'];
       
       scheduleChart = new Chart(ctx, {
         type: 'doughnut',
@@ -1273,7 +1289,7 @@
               .work { background: #e52d27; color: white; }
               .commute { background: #fd7e14; color: white; }
               .sleep { background: #6c757d; color: white; }
-              .family { background: #ff6b6b; color: white; }
+              .family { background: #007bff; color: white; }
               .social { background: #ffc107; color: #212529; }
               .other { background: #96ceb4; color: white; }
               .stats { margin-top: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
