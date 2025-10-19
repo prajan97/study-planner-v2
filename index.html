@@ -385,12 +385,49 @@
     .grid-cell.social { background: #ffc107; color: #212529; font-weight:600; }
     .grid-cell.other { background: #96ceb4; color: white; }
     
-    .stats-section {
-      margin-top: 25px;
+    .calendar-stats-container {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 900px) {
+      .calendar-stats-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+    }
+    
+    .calendar-section {
+      min-height: 400px;
+    }
+    
+    .stats-section-right {
+      background: var(--bg-tertiary);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      height: fit-content;
       display: none;
     }
     
-    .stats-section.show { display: block; }
+    .stats-section-right.show { 
+      display: block; 
+    }
+    
+    .stats-grid-right {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .chart-container-right {
+      width: 100%;
+      height: 180px;
+      margin: 0 auto;
+    }
     
     .stats-grid {
       display: grid;
@@ -685,15 +722,6 @@
         <div style="font-weight: 600; margin-bottom: 8px;">Schedule Overview</div>
         <div id="scheduleBreakdown"></div>
       </div>
-
-      <!-- Stats Section -->
-      <div id="statsSection" class="stats-section">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center;">Weekly Breakdown</div>
-        <div id="statsGrid" class="stats-grid"></div>
-        <div class="chart-container">
-          <canvas id="scheduleChart" width="300" height="200"></canvas>
-        </div>
-      </div>
     </div>
 
     <!-- Right Panel: Calendar -->
@@ -761,8 +789,21 @@
           <strong>Tip:</strong> Click and drag to fill time slots. Right-click to remove activities.
         </div>
         
-        <div class="calendar-grid">
-          <div id="weeklyGrid" class="weekly-grid"></div>
+        <!-- Calendar and Stats Container -->
+        <div class="calendar-stats-container">
+          <div class="calendar-section">
+            <div class="calendar-grid">
+              <div id="weeklyGrid" class="weekly-grid"></div>
+            </div>
+          </div>
+          
+          <div class="stats-section-right" id="statsSectionRight">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center;">Weekly Breakdown</div>
+            <div id="statsGridRight" class="stats-grid-right"></div>
+            <div class="chart-container-right">
+              <canvas id="scheduleChartRight" width="250" height="180"></canvas>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1112,8 +1153,8 @@
     }
     
     function updateStatsDisplay(counts) {
-      const statsSection = document.getElementById('statsSection');
-      const statsGrid = document.getElementById('statsGrid');
+      const statsSection = document.getElementById('statsSectionRight');
+      const statsGrid = document.getElementById('statsGridRight');
       
       const total = counts.work + counts.sleep + counts.study + counts.family + counts.social + counts.other + counts.commute;
       const available = 168 - total;
@@ -1159,7 +1200,7 @@
     }
     
     function createScheduleChart(counts) {
-      const canvas = document.getElementById('scheduleChart');
+      const canvas = document.getElementById('scheduleChartRight');
       if (!canvas) return;
       
       const ctx = canvas.getContext('2d');
