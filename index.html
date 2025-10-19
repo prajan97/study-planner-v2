@@ -18,8 +18,59 @@
       background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
       color: white;
       padding: 40px 0;
-      text-align: center;
       box-shadow: 0 4px 20px rgba(229, 45, 39, 0.3);
+      position: relative;
+    }
+    
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header-content > div:first-child {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .theme-toggle, .action-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      padding: 10px 16px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(10px);
+      font-weight: 500;
+    }
+    
+    .theme-toggle {
+      padding: 12px;
+      min-width: 44px;
+      justify-content: center;
+    }
+    
+    .theme-toggle:hover, .action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .theme-icon, .action-icon {
+      font-size: 16px;
     }
     .header h1 { font-size: 32px; margin-bottom: 8px; font-weight: 700; }
     .header .subtitle { font-size: 16px; opacity: 0.95; }
@@ -342,13 +393,149 @@
       margin-bottom: 15px;
       text-align: center;
     }
+    
+    /* Dark mode styles */
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --bg-tertiary: #3a3a3a;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --text-muted: #888888;
+      --border-color: #404040;
+      --hover-bg: #404040;
+      --card-bg: #2d2d2d;
+      --input-bg: #3a3a3a;
+    }
+    
+    [data-theme="light"] {
+      --bg-primary: #f8f9fa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f8f9fa;
+      --text-primary: #212529;
+      --text-secondary: #495057;
+      --text-muted: #6c757d;
+      --border-color: #e9ecef;
+      --hover-bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --input-bg: #ffffff;
+    }
+    
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .left-panel, .right-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    
+    .intro-text {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+    
+    .panel-title {
+      color: var(--text-primary);
+    }
+    
+    label {
+      color: var(--text-primary);
+    }
+    
+    select, input[type="number"] {
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    
+    select:focus, input[type="number"]:focus {
+      border-color: #e52d27;
+    }
+    
+    .helper-text {
+      color: var(--text-muted);
+    }
+    
+    .calendar-header {
+      background: var(--bg-tertiary);
+    }
+    
+    .grid-header {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+    
+    .grid-cell {
+      border: 1px solid var(--border-color);
+    }
+    
+    .grid-cell:hover:not(.work):not(.sleep) { 
+      background: rgba(229, 45, 39, 0.1);
+    }
+    
+    .stat-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+    }
+    
+    .calendar-grid {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+    }
+    
+    .usage-tip {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+    
+    [data-theme="dark"] .usage-tip {
+      background: #2a2a1a;
+      border: 1px solid #4a4a2a;
+      color: #d4d4aa;
+    }
+    
+    .schedule-info {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+    
+    [data-theme="dark"] .schedule-info {
+      background: #1a2a2a;
+      border-left: 3px solid #17a2b8;
+      color: #a2d2df;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>Study Planner</h1>
-    <div class="subtitle">Realistic recommendations for your schedule</div>
-    <div class="uni-name">KING'S COLLEGE LONDON</div>
+    <div class="header-content">
+      <div>
+        <h1>Study Planner</h1>
+        <div class="subtitle">Realistic recommendations for your schedule</div>
+        <div class="uni-name">KING'S COLLEGE LONDON</div>
+      </div>
+      <div class="header-actions">
+        <button id="printBtn" class="action-btn" aria-label="Print schedule">
+          <span>Print</span>
+        </button>
+        <button id="downloadBtn" class="action-btn" aria-label="Download schedule">
+          <span>Download</span>
+        </button>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">◐</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="main-container">
@@ -851,8 +1038,192 @@
       }, 300);
     }
     
+    // Theme toggle functionality
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggle(savedTheme);
+    }
+    
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeToggle(newTheme);
+    }
+    
+    function updateThemeToggle(theme) {
+      const toggle = document.getElementById('themeToggle');
+      const icon = toggle.querySelector('.theme-icon');
+      
+      if (theme === 'dark') {
+        icon.textContent = '◑';
+        toggle.setAttribute('aria-label', 'Switch to light mode');
+      } else {
+        icon.textContent = '◐';
+        toggle.setAttribute('aria-label', 'Switch to dark mode');
+      }
+    }
+    
+    // Print functionality
+    function printSchedule() {
+      const printContent = `
+        <html>
+          <head>
+            <title>Study Schedule - King's College London</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #e52d27; padding-bottom: 20px; }
+              .schedule-grid { display: grid; grid-template-columns: 60px repeat(7, 1fr); grid-auto-rows: 25px; border: 1px solid #ccc; }
+              .grid-header { background: #f5f5f5; border: 1px solid #ccc; text-align: center; font-weight: bold; font-size: 12px; line-height: 25px; }
+              .grid-cell { border: 1px solid #ddd; text-align: center; font-size: 10px; line-height: 25px; }
+              .study { background: #28a745; color: white; }
+              .work { background: #e52d27; color: white; }
+              .sleep { background: #6c757d; color: white; }
+              .family { background: #ff6b6b; color: white; }
+              .social { background: #ffc107; color: #212529; }
+              .other { background: #96ceb4; color: white; }
+              .stats { margin-top: 20px; display: flex; gap: 20px; justify-content: center; }
+              .stat-item { text-align: center; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+              @media print { body { margin: 0; } }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>Study Schedule</h1>
+              <p>King's College London</p>
+              <p>Generated on: ${new Date().toLocaleDateString()}</p>
+            </div>
+            ${generatePrintableGrid()}
+            ${generatePrintableStats()}
+          </body>
+        </html>
+      `;
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+    
+    // Download functionality
+    function downloadSchedule() {
+      const scheduleData = generateScheduleData();
+      const csvContent = generateCSV(scheduleData);
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `study-schedule-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    function generatePrintableGrid() {
+      const grid = document.getElementById('weeklyGrid');
+      if (!grid) return '<p>No schedule generated yet.</p>';
+      
+      const days = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      let html = '<div class="schedule-grid">';
+      
+      // Headers
+      days.forEach(day => {
+        html += `<div class="grid-header">${day}</div>`;
+      });
+      
+      // Time slots
+      for(let hour = 0; hour < 24; hour++) {
+        html += `<div class="grid-header">${hour}:00</div>`;
+        for(let day = 0; day < 7; day++) {
+          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
+          const classes = cell ? cell.className : 'grid-cell';
+          const activity = classes.includes('study') ? 'Study' :
+                          classes.includes('work') ? 'Work' :
+                          classes.includes('sleep') ? 'Sleep' :
+                          classes.includes('family') ? 'Family' :
+                          classes.includes('social') ? 'Social' :
+                          classes.includes('other') ? 'Other' : '';
+          html += `<div class="${classes}">${activity}</div>`;
+        }
+      }
+      
+      html += '</div>';
+      return html;
+    }
+    
+    function generatePrintableStats() {
+      const cells = document.querySelectorAll('.grid-cell');
+      const countBy = {study:0, work:0, sleep:0, family:0, social:0, other:0};
+      
+      cells.forEach(c => {
+        if(c.classList.length > 1) {
+          const act = c.classList[1];
+          if(countBy[act] !== undefined) countBy[act]++;
+        }
+      });
+      
+      return `
+        <div class="stats">
+          <div class="stat-item"><strong>${countBy.work}h</strong><br>Work</div>
+          <div class="stat-item"><strong>${countBy.sleep}h</strong><br>Sleep</div>
+          <div class="stat-item"><strong>${countBy.study}h</strong><br>Study</div>
+          <div class="stat-item"><strong>${countBy.family}h</strong><br>Family</div>
+          <div class="stat-item"><strong>${countBy.social}h</strong><br>Social</div>
+          <div class="stat-item"><strong>${countBy.other}h</strong><br>Other</div>
+        </div>
+      `;
+    }
+    
+    function generateScheduleData() {
+      const schedule = [];
+      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      
+      for(let hour = 0; hour < 24; hour++) {
+        const timeSlot = `${hour}:00`;
+        const row = { Time: timeSlot };
+        
+        for(let day = 0; day < 7; day++) {
+          const cell = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
+          const activity = cell && cell.classList.length > 1 ? 
+            cell.classList[1].charAt(0).toUpperCase() + cell.classList[1].slice(1) : '';
+          row[days[day]] = activity;
+        }
+        
+        schedule.push(row);
+      }
+      
+      return schedule;
+    }
+    
+    function generateCSV(data) {
+      if (!data.length) return '';
+      
+      const headers = Object.keys(data[0]);
+      const csvRows = [
+        headers.join(','),
+        ...data.map(row => headers.map(header => row[header] || '').join(','))
+      ];
+      
+      return csvRows.join('\n');
+    }
+    
     // Initialize on page load
-    document.addEventListener('DOMContentLoaded', initWeeklyGrid);
+    document.addEventListener('DOMContentLoaded', () => {
+      initWeeklyGrid();
+      initTheme();
+      
+      // Add event listeners
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('printBtn').addEventListener('click', printSchedule);
+      document.getElementById('downloadBtn').addEventListener('click', downloadSchedule);
+    });
   </script>
 </body>
 </html>
