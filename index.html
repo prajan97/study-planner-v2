@@ -8,11 +8,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <style>
     :root {
-      --accent: #9b1c1c;
-      --accent-dark: #7f1d1d;
-      --accent-mid: #b91c1c;
-      --accent-light: rgba(155,28,28,0.07);
-      --accent-glow: rgba(155,28,28,0.18);
+      /* Walbrook Institute London — black + orange */
+      --accent: #ED6B1F;
+      --accent-dark: #C9540F;
+      --accent-mid: #F5934E;
+      --accent-light: rgba(237,107,31,0.08);
+      --accent-glow: rgba(237,107,31,0.20);
+      --header-bg: #16181d;
       --bg: #f4f5f7;
       --surface: #ffffff;
       --surface-2: #f0f2f5;
@@ -22,14 +24,16 @@
       --text-3: #9ca3af;
       --shadow: 0 4px 24px rgba(17,24,39,0.07);
       --shadow-lg: 0 12px 48px rgba(17,24,39,0.12);
+      --weekend: rgba(17,24,39,0.035);
       --r: 14px;
     }
     [data-theme="dark"] {
-      --accent: #ef4444;
-      --accent-dark: #dc2626;
-      --accent-mid: #f87171;
-      --accent-light: rgba(239,68,68,0.1);
-      --accent-glow: rgba(239,68,68,0.2);
+      --accent: #FF8A3D;
+      --accent-dark: #ED6B1F;
+      --accent-mid: #FFA76B;
+      --accent-light: rgba(255,138,61,0.12);
+      --accent-glow: rgba(255,138,61,0.22);
+      --header-bg: #0a0c10;
       --bg: #0d1117;
       --surface: #161b22;
       --surface-2: #1c2230;
@@ -39,6 +43,7 @@
       --text-3: #4d5566;
       --shadow: 0 4px 24px rgba(0,0,0,0.4);
       --shadow-lg: 0 12px 48px rgba(0,0,0,0.5);
+      --weekend: rgba(255,255,255,0.03);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -51,7 +56,8 @@
 
     /* ─── HEADER ─── */
     .header {
-      background: var(--accent);
+      background: var(--header-bg);
+      border-bottom: 3px solid var(--accent);
       position: relative;
       overflow: hidden;
       padding: 0;
@@ -60,7 +66,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+      background: linear-gradient(135deg, rgba(237,107,31,0.12) 0%, transparent 55%);
     }
     .header-inner {
       max-width: 1440px;
@@ -74,7 +80,7 @@
     .logo-area { display: flex; align-items: center; gap: 14px; }
     .logo-mark {
       width: 40px; height: 40px;
-      background: rgba(255,255,255,0.12);
+      background: var(--accent);
       border-radius: 8px;
       display: grid; place-items: center;
       border: 1px solid rgba(255,255,255,0.18);
@@ -105,7 +111,7 @@
     }
     .header-actions { display: flex; gap: 8px; align-items: center; }
     .hbtn {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.18);
       color: rgba(255,255,255,0.85);
       padding: 8px 16px;
@@ -117,7 +123,7 @@
       font-family: 'DM Sans', sans-serif;
       letter-spacing: 0.2px;
     }
-    .hbtn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    .hbtn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
     .hbtn.icon { padding: 8px 12px; }
 
     /* ─── LAYOUT ─── */
@@ -147,7 +153,7 @@
       margin-bottom: 6px;
     }
     .panel-sub { font-size: 13px; color: var(--text-3); margin-bottom: 28px; line-height: 1.5; }
-    
+
     .left-panel { position: sticky; top: 28px; }
 
     /* ─── FORM ─── */
@@ -228,7 +234,7 @@
       margin-top: 8px;
       letter-spacing: 0.3px;
     }
-    .submit-btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,58,95,0.3); }
+    .submit-btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
 
     /* ─── OVERVIEW STRIP (header) ─── */
     .overview-strip {
@@ -327,9 +333,9 @@
       font-family: 'DM Sans', sans-serif;
       transition: all .2s;
     }
-    .tbtn:hover { border-color: var(--text-3); background: var(--surface-2); }
+    .tbtn:hover { border-color: var(--accent); background: var(--surface-2); }
     .tbtn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .tbtn.primary:hover { background: var(--accent-dark); }
+    .tbtn.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
     /* Legend */
     .legend {
@@ -362,41 +368,65 @@
     }
     .weekly-grid {
       display: grid;
-      grid-template-columns: 52px repeat(7, 1fr);
-      grid-auto-rows: 20px;
+      grid-template-columns: 46px repeat(7, 1fr);
+      grid-auto-rows: minmax(11px, auto);
       user-select: none;
     }
-    .g-head {
+    /* Both axes — days along the top, hours down the side — share ONE type treatment,
+       so the header row and the time gutter read as a single frame around the grid. */
+    .g-head, .g-time {
       background: var(--surface-2);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+      font-family: 'DM Sans', sans-serif;
       font-size: 10px;
-      font-weight: 700;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      font-variant-numeric: tabular-nums;
+      border-right: 1px solid var(--border);
+    }
+    .g-head {
+      border-bottom: 1px solid var(--border);
       text-align: center;
-      line-height: 20px;
-      color: var(--text-3);
-      letter-spacing: 0.5px;
+      line-height: 24px;
       text-transform: uppercase;
+    }
+    /* One hour label per hour, spanning both half-hour rows, sitting at the TOP of
+       its band so it marks the line where that hour begins. */
+    .g-time {
+      grid-row: span 2;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 3px 7px 0 0;
+      line-height: 1;
     }
     .g-cell {
       border-right: 1px solid var(--border);
-      border-bottom: 1px solid rgba(0,0,0,0.04);
+      border-top: 1px solid var(--border);
       cursor: pointer;
       transition: background .1s;
-      font-size: 9px;
-      text-align: center;
-      line-height: 20px;
+      line-height: 11px;
       color: transparent;
     }
-    [data-theme="dark"] .g-cell { border-bottom: 1px solid rgba(255,255,255,0.03); }
+    /* Weekends sit on a faint tint so the working week reads as a block.
+       Deliberately fainter than the axis tone, so weekend columns never read as chrome. */
+    .g-cell[data-day="5"], .g-cell[data-day="6"] { background: var(--weekend); }
+    /* Rule on the hour only — no line through the middle of an hour */
+    .g-cell[data-half="1"] { border-top-color: transparent; }
+    /* A run of the same activity reads as one solid bar, not stacked strips */
+    .g-cell.is-work, .g-cell.is-commute, .g-cell.is-sleep, .g-cell.is-study,
+    .g-cell.is-family, .g-cell.is-social, .g-cell.is-other { border-top-color: transparent; }
     .g-cell:hover:not(.is-work):not(.is-sleep):not(.is-commute) { background: var(--accent-light) !important; }
     .g-cell.is-study  { background: #2d9a57; color: rgba(255,255,255,0.6); }
-    .g-cell.is-work   { background: #9b1c1c; cursor: not-allowed; }
-    .g-cell.is-commute{ background: #e07b1a; cursor: not-allowed; }
-    .g-cell.is-sleep  { background: #6b7280; cursor: not-allowed; }
-    .g-cell.is-family { background: #e05a7a; color: rgba(255,255,255,0.6); }
-    .g-cell.is-social { background: #c9981a; color: rgba(255,255,255,0.6); }
-    .g-cell.is-other  { background: #5a9e82; color: rgba(255,255,255,0.6); }
+    .g-cell.is-work   { background: #ED6B1F; cursor: not-allowed; }
+    .g-cell.is-commute{ background: #3E7CB1; cursor: not-allowed; }
+    /* Sleep is the one thing you can't trade away — keep it quiet so work and study lead */
+    .g-cell.is-sleep  { background: #c2c8d1; cursor: not-allowed; }
+    [data-theme="dark"] .g-cell.is-sleep { background: #39404e; }
+    .g-cell.is-family { background: #d94f78; color: rgba(255,255,255,0.6); }
+    .g-cell.is-social { background: #8a6fd1; color: rgba(255,255,255,0.6); }
+    .g-cell.is-other  { background: #4f9d97; color: rgba(255,255,255,0.6); }
 
     /* Placeholder */
     .placeholder {
@@ -419,8 +449,6 @@
     }
     .placeholder h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text-2); }
     .placeholder p { font-size: 14px; max-width: 300px; line-height: 1.6; }
-
-    /* Chart removed */
 
     /* Schedule info callout */
     .callout {
@@ -449,6 +477,22 @@
     [data-theme="dark"] .placeholder h3 { color: var(--text-2); }
     [data-theme="dark"] .placeholder p { color: var(--text-2); }
     [data-theme="dark"] .day-chip label { color: var(--text-2); }
+
+    /* ─── Print: the timetable is the artefact, not the interface ─── */
+    @media print {
+      body { background: #fff; }
+      .header { background: #fff; border-bottom: 2px solid var(--accent); }
+      .header::before, .header-actions, .left-panel, .cal-toolbar, .cal-tip { display: none !important; }
+      .logo-text h1, .ov-val { color: #111 !important; }
+      .logo-text span, .ov-lbl { color: #555 !important; }
+      .ov-item { border-right-color: #ccc; }
+      .ov-free .ov-val { color: #0a7d44 !important; }
+      .overview-strip { border-top-color: #ddd; }
+      .wrap { display: block; padding: 0; }
+      .panel { border: none; box-shadow: none; padding: 16px 0 0; }
+      .grid-wrap { box-shadow: none; }
+      .g-cell, .sbar-chip .val { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
 
     /* ─── Responsive ─── */
     @media (max-width: 700px) {
@@ -491,9 +535,9 @@
   <!-- Overview strip — shown after generating -->
   <div style="max-width:1440px;margin:0 auto;padding:0 40px 20px;">
     <div class="overview-strip" id="overviewStrip">
-      <div class="ov-item"><div class="ov-dot" style="background:rgba(255,255,255,0.6)"></div><div><div class="ov-val" id="ov-work">—</div><div class="ov-lbl">Work</div></div></div>
-      <div class="ov-item"><div class="ov-dot" style="background:#e07b1a"></div><div><div class="ov-val" id="ov-commute">—</div><div class="ov-lbl">Commute</div></div></div>
-      <div class="ov-item"><div class="ov-dot" style="background:#9ca3af"></div><div><div class="ov-val" id="ov-sleep">—</div><div class="ov-lbl">Sleep</div></div></div>
+      <div class="ov-item"><div class="ov-dot" style="background:#ED6B1F"></div><div><div class="ov-val" id="ov-work">—</div><div class="ov-lbl">Work</div></div></div>
+      <div class="ov-item"><div class="ov-dot" style="background:#3E7CB1"></div><div><div class="ov-val" id="ov-commute">—</div><div class="ov-lbl">Commute</div></div></div>
+      <div class="ov-item"><div class="ov-dot" style="background:#9aa3af"></div><div><div class="ov-val" id="ov-sleep">—</div><div class="ov-lbl">Sleep</div></div></div>
       <div class="ov-item ov-free"><div class="ov-dot" style="background:#7dffb3"></div><div><div class="ov-val" id="ov-free">—</div><div class="ov-lbl">Available / week</div></div></div>
     </div>
   </div>
@@ -529,13 +573,13 @@
         <select id="commuteSchedule" required>
           <option value="">— Select commute time —</option>
           <option value="none"     data-hours="0">No commute (WFH / remote)</option>
-          <option value="short"    data-hours="5">Short: 30 min total (5 hrs/week)</option>
-          <option value="moderate" data-hours="7.5">Moderate: 45 min total (7.5 hrs/week)</option>
-          <option value="standard" data-hours="10" selected>Standard: 1 hr total (10 hrs/week)</option>
-          <option value="long"     data-hours="12.5">Long: 1.5 hrs total (12.5 hrs/week)</option>
-          <option value="extended" data-hours="15">Extended: 2+ hrs total (15 hrs/week)</option>
+          <option value="short"    data-hours="5"  data-oneway="0.5">Short: 30 min each way (5 hrs/week)</option>
+          <option value="moderate" data-hours="7.5" data-oneway="0.75">Moderate: 45 min each way (7.5 hrs/week)</option>
+          <option value="standard" data-hours="10" data-oneway="1" selected>Standard: 1 hr each way (10 hrs/week)</option>
+          <option value="long"     data-hours="15" data-oneway="1.5">Long: 1.5 hrs each way (15 hrs/week)</option>
+          <option value="extended" data-hours="20" data-oneway="2">Extended: 2 hrs each way (20 hrs/week)</option>
         </select>
-        <div class="field-note">Total daily travel to and from work</div>
+        <div class="field-note">Travel time one way, on the days you go in</div>
       </div>
 
       <div class="field">
@@ -564,11 +608,11 @@
         <label>Sleep Schedule</label>
         <select id="sleepSchedule" required>
           <option value="">— Select sleep pattern —</option>
-          <option value="short"    data-hours="35">Short: 11:30pm–6:30am (35 hrs/week)</option>
-          <option value="light"    data-hours="42">Light: 11pm–6am (42 hrs/week)</option>
-          <option value="average"  data-hours="49" selected>Average: 10:30pm–6am (49 hrs/week)</option>
-          <option value="good"     data-hours="56">Good: 10pm–6am (56 hrs/week)</option>
-          <option value="extended" data-hours="63">Extended: 9:30pm–6am (63 hrs/week)</option>
+          <option value="short"    data-hours="35">Short: 12:30am–5:30am (5 hrs a night)</option>
+          <option value="light"    data-hours="42">Light: 11:30pm–5:30am (6 hrs a night)</option>
+          <option value="average"  data-hours="49" selected>Average: 11pm–6am (7 hrs a night)</option>
+          <option value="good"     data-hours="56">Good: 10pm–6am (8 hrs a night)</option>
+          <option value="extended" data-hours="63">Extended: 9:30pm–6:30am (9 hrs a night)</option>
         </select>
         <div class="field-note">Auto-scheduled every night</div>
       </div>
@@ -595,13 +639,13 @@
 
       <!-- Legend -->
       <div class="legend">
-        <div class="legend-item"><div class="leg-dot" style="background:#9b1c1c"></div>Work</div>
-        <div class="legend-item"><div class="leg-dot" style="background:#e07b1a"></div>Commute</div>
-        <div class="legend-item"><div class="leg-dot" style="background:#6b7280"></div>Sleep</div>
+        <div class="legend-item"><div class="leg-dot" style="background:#ED6B1F"></div>Work</div>
+        <div class="legend-item"><div class="leg-dot" style="background:#3E7CB1"></div>Commute</div>
+        <div class="legend-item"><div class="leg-dot" style="background:#9aa3af"></div>Sleep</div>
         <div class="legend-item"><div class="leg-dot" style="background:#2d9a57"></div>Study</div>
-        <div class="legend-item"><div class="leg-dot" style="background:#e05a7a"></div>Family</div>
-        <div class="legend-item"><div class="leg-dot" style="background:#c9981a"></div>Social</div>
-        <div class="legend-item"><div class="leg-dot" style="background:#5a9e82"></div>Other</div>
+        <div class="legend-item"><div class="leg-dot" style="background:#d94f78"></div>Family</div>
+        <div class="legend-item"><div class="leg-dot" style="background:#8a6fd1"></div>Social</div>
+        <div class="legend-item"><div class="leg-dot" style="background:#4f9d97"></div>Other</div>
       </div>
 
       <!-- Toolbar -->
@@ -621,7 +665,7 @@
         </div>
       </div>
 
-      <div class="cal-tip">Click or drag to paint time slots · Right-click to erase</div>
+      <div class="cal-tip">Click or drag to paint half-hour slots · Right-click to erase</div>
 
       <!-- Grid -->
       <div class="grid-wrap">
@@ -643,13 +687,13 @@
   // ─────────────────────────────────────────────
   const html = document.documentElement;
   function initTheme() {
-    const saved = localStorage.getItem('kcl-theme') || 'light';
+    const saved = localStorage.getItem('walbrook-theme') || 'light';
     html.setAttribute('data-theme', saved);
   }
   document.getElementById('themeBtn').addEventListener('click', () => {
     const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     html.setAttribute('data-theme', next);
-    localStorage.setItem('kcl-theme', next);
+    localStorage.setItem('walbrook-theme', next);
   });
 
   // ─────────────────────────────────────────────
@@ -677,10 +721,16 @@
   // ─────────────────────────────────────────────
   //  GRID INIT
   // ─────────────────────────────────────────────
+  // The grid runs in 30-minute slots: 48 slots per day, slot 0 = 00:00, slot 1 = 00:30 …
+  const SLOTS = 48;
+  const slotTime = s => `${String(Math.floor(s/2)).padStart(2,'0')}:${s % 2 ? '30' : '00'}`;
+  const cellAt = (day, slot) => document.querySelector(`[data-day="${day}"][data-slot="${slot}"]`);
+
   function buildGrid() {
     const grid = document.getElementById('weeklyGrid');
     grid.innerHTML = '';
-    const heads = ['Time','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    // Corner cell stays blank — an axis label there is just noise
+    const heads = ['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     heads.forEach(h => {
       const d = document.createElement('div');
       d.className = 'g-head';
@@ -689,19 +739,23 @@
     });
     for (let hr = 0; hr < 24; hr++) {
       const lbl = document.createElement('div');
-      lbl.className = 'g-head';
+      lbl.className = 'g-time';
+      lbl.dataset.hour = hr;
       lbl.textContent = `${String(hr).padStart(2,'0')}:00`;
-      lbl.style.borderRight = '1px solid var(--border)';
       grid.appendChild(lbl);
-      for (let day = 0; day < 7; day++) {
-        const c = document.createElement('div');
-        c.className = 'g-cell';
-        c.dataset.day = day;
-        c.dataset.hour = hr;
-        c.addEventListener('mousedown', onCellDown);
-        c.addEventListener('mouseover', onCellOver);
-        c.addEventListener('contextmenu', onCellRight);
-        grid.appendChild(c);
+      for (let half = 0; half < 2; half++) {
+        for (let day = 0; day < 7; day++) {
+          const c = document.createElement('div');
+          c.className = 'g-cell';
+          c.dataset.day = day;
+          c.dataset.slot = hr * 2 + half;
+          c.dataset.half = half;
+          c.dataset.hour = hr;
+          c.addEventListener('mousedown', onCellDown);
+          c.addEventListener('mouseover', onCellOver);
+          c.addEventListener('contextmenu', onCellRight);
+          grid.appendChild(c);
+        }
       }
     }
   }
@@ -758,12 +812,13 @@
     'long-55':      {s:7, e:18},
     'long-60':      {s:7, e:19},
   };
+  // Sleep as bedtime + length, so a night can wrap past midnight and land on a half hour
   const sleepMap = {
-    'short':    {s:23, e:6},
-    'light':    {s:23, e:6},
-    'average':  {s:22, e:6},
-    'good':     {s:22, e:6},
-    'extended': {s:21, e:6},
+    'short':    {bed:0.5,  hrs:5},   // 12:30am – 5:30am
+    'light':    {bed:23.5, hrs:6},   // 11:30pm – 5:30am
+    'average':  {bed:23,   hrs:7},   // 11pm – 6am
+    'good':     {bed:22,   hrs:8},   // 10pm – 6am
+    'extended': {bed:21.5, hrs:9},   // 9:30pm – 6:30am
   };
 
   function getWorkDays(arr) {
@@ -786,7 +841,7 @@
   // ─────────────────────────────────────────────
   //  POPULATE SCHEDULE
   // ─────────────────────────────────────────────
-  function populateSchedule(workType, commuteType, sleepType, arr) {
+  function populateSchedule(workType, commuteType, sleepType, arr, oneWayHours) {
     document.querySelectorAll('.g-cell').forEach(c => c.className = 'g-cell');
 
     const allWorkDays  = getWorkDays(arr);      // Mon–Fri always (work happens every day)
@@ -794,36 +849,40 @@
     const wh = workMap[workType] || workMap['standard'];
     const sh = sleepMap[sleepType] || sleepMap['average'];
 
+    const workStart = wh.s * 2, workEnd = wh.e * 2;   // in half-hour slots
+
     // Work — every weekday regardless of arrangement
     allWorkDays.forEach(day => {
-      for (let h = wh.s; h < wh.e; h++) {
-        const c = document.querySelector(`[data-day="${day}"][data-hour="${h}"]`);
+      for (let s = workStart; s < workEnd; s++) {
+        const c = cellAt(day, s);
         if (c) c.classList.add('is-work');
       }
     });
 
-    // Commute — only on office/commute days, and only if commute isn't 'none'
-    if (commuteType !== 'none' && commuteDays.length > 0) {
-      const morningHour = Math.max(0, wh.s - 1);
-      const eveningHour = Math.min(23, wh.e);
-      commuteDays.forEach(day => {
-        const cm = document.querySelector(`[data-day="${day}"][data-hour="${morningHour}"]`);
-        const ce = document.querySelector(`[data-day="${day}"][data-hour="${eveningHour}"]`);
-        if (cm && !cm.classList.contains('is-work')) cm.classList.add('is-commute');
-        if (ce && !ce.classList.contains('is-work')) ce.classList.add('is-commute');
-      });
+    // Sleep — every night, from bedtime for the length of the night (wraps past midnight)
+    for (let day = 0; day < 7; day++) {
+      for (let i = 0; i < sh.hrs * 2; i++) {
+        const c = cellAt(day, (sh.bed * 2 + i) % SLOTS);
+        if (c && !c.classList.contains('is-work')) c.classList.add('is-sleep');
+      }
     }
 
-    // Sleep — every night
-    for (let day = 0; day < 7; day++) {
-      for (let h = sh.s; h < 24; h++) {
-        const c = document.querySelector(`[data-day="${day}"][data-hour="${h}"]`);
-        if (c) c.classList.add('is-sleep');
-      }
-      for (let h = 0; h < sh.e; h++) {
-        const c = document.querySelector(`[data-day="${day}"][data-hour="${h}"]`);
-        if (c) c.classList.add('is-sleep');
-      }
+    // Commute — only on office days, sized by the one-way travel time.
+    // 30-minute slots, so 1.5 hrs each way is 3 slots and 2 hrs is 4.
+    if (commuteType !== 'none' && commuteDays.length > 0) {
+      const slots = Math.max(1, Math.round((oneWayHours || 1) * 2));
+      const paint = (day, slot) => {
+        if (slot < 0 || slot >= SLOTS) return;
+        const c = cellAt(day, slot);
+        if (!c || c.classList.contains('is-work')) return;
+        c.className = 'g-cell is-commute';   // overrides sleep — you're travelling, not asleep
+      };
+      commuteDays.forEach(day => {
+        for (let i = 1; i <= slots; i++) {
+          paint(day, workStart - i);        // morning: backwards from the start of work
+          paint(day, workEnd + (i - 1));    // evening: forwards from the end of work
+        }
+      });
     }
 
     updateStats();
@@ -833,15 +892,18 @@
   //  STATS
   // ─────────────────────────────────────────────
   const COLORS = {
-    work:'#9b1c1c', commute:'#e07b1a', sleep:'#6b7280',
-    study:'#2d9a57', family:'#e05a7a', social:'#c9981a', other:'#5a9e82'
+    work:'#ED6B1F', commute:'#3E7CB1', sleep:'#9aa3af',
+    study:'#2d9a57', family:'#d94f78', social:'#8a6fd1', other:'#4f9d97'
   };
+
+  // Each cell is half an hour, so hours = slots / 2
+  const fmtHrs = h => (Number.isInteger(h) ? h : h.toFixed(1)) + 'h';
 
   function countCells() {
     const counts = {work:0,commute:0,sleep:0,study:0,family:0,social:0,other:0};
     document.querySelectorAll('.g-cell').forEach(c => {
       for (const key of Object.keys(counts)) {
-        if (c.classList.contains('is-' + key)) { counts[key]++; break; }
+        if (c.classList.contains('is-' + key)) { counts[key] += 0.5; break; }
       }
     });
     return counts;
@@ -868,12 +930,12 @@
       statsBar.classList.add('show');
       statsBar.innerHTML = items.map(i => `
         <div class="sbar-chip">
-          <div class="val" style="color:${i.color}">${counts[i.key]}h</div>
+          <div class="val" style="color:${i.color}">${fmtHrs(counts[i.key])}</div>
           <div class="lbl">${i.label}</div>
         </div>
       `).join('') + `
         <div class="sbar-chip" style="border-color:var(--accent)">
-          <div class="val" style="color:var(--accent)">${free}h</div>
+          <div class="val" style="color:var(--accent)">${fmtHrs(free)}</div>
           <div class="lbl">Free</div>
         </div>
       `;
@@ -882,10 +944,10 @@
     // Overview strip in header (live-updates as you paint)
     const el = id => document.getElementById(id);
     if (el('ov-work')) {
-      el('ov-work').textContent    = counts.work + 'h';
-      el('ov-commute').textContent = counts.commute + 'h';
-      el('ov-sleep').textContent   = counts.sleep + 'h';
-      el('ov-free').textContent    = free + 'h';
+      el('ov-work').textContent    = fmtHrs(counts.work);
+      el('ov-commute').textContent = fmtHrs(counts.commute);
+      el('ov-sleep').textContent   = fmtHrs(counts.sleep);
+      el('ov-free').textContent    = fmtHrs(free);
     }
   }
 
@@ -916,7 +978,8 @@
     document.getElementById('ov-free').textContent    = avail + 'h';
     document.getElementById('overviewStrip').classList.add('show');
 
-    populateSchedule(ws.value, cs.value, ss.value, wa.value);
+    const oneWay = parseFloat(cs.selectedOptions[0].dataset.oneway || 0);
+    populateSchedule(ws.value, cs.value, ss.value, wa.value, oneWay);
 
     document.getElementById('placeholder').style.display = 'none';
     document.getElementById('calendarContainer').classList.add('show');
@@ -959,10 +1022,13 @@
       s.days.forEach(day => {
         s.hours.forEach(hr => {
           if (Math.random() < s.w) {
-            const c = document.querySelector(`[data-day="${day}"][data-hour="${hr}"]`);
-            if (c && !isLocked(c) && c.className === 'g-cell') {
-              c.classList.add('is-' + s.act);
-            }
+            // fill both half-hour slots of that hour
+            [hr * 2, hr * 2 + 1].forEach(slot => {
+              const c = cellAt(day, slot);
+              if (c && !isLocked(c) && c.className === 'g-cell') {
+                c.classList.add('is-' + s.act);
+              }
+            });
           }
         });
       });
@@ -981,10 +1047,10 @@
   document.getElementById('downloadBtn').addEventListener('click', () => {
     const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
     const rows = [['Time', ...days]];
-    for (let h = 0; h < 24; h++) {
-      const row = [`${String(h).padStart(2,'0')}:00`];
+    for (let s = 0; s < SLOTS; s++) {
+      const row = [slotTime(s)];
       for (let d = 0; d < 7; d++) {
-        const c = document.querySelector(`[data-day="${d}"][data-hour="${h}"]`);
+        const c = cellAt(d, s);
         const acts = ['work','commute','sleep','study','family','social','other'];
         let label = '';
         for (const a of acts) {
@@ -998,7 +1064,7 @@
     const blob = new Blob([csv], {type:'text/csv'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `kcl-study-schedule-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `walbrook-study-schedule-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
   });
 
